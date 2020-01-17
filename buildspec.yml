@@ -5,17 +5,11 @@ phases:
         java: openjdk8
         python: 3.7
     commands:
-        pip install pre-commit
+      -  pip install pre-commit cloudformation-cli-java-plugin
   build:
     commands:
-      # pre-build check for commit hooks
       - pre-commit run --all-files
-      # install internal SDK
-      - >
-        mvn org.apache.maven.plugins:maven-install-plugin:3.0.0-M1:install-file
-        --batch-mode
-        --no-transfer-progress
-        -Dfile="$CODEBUILD_SRC_DIR_SDK/cloudformation-2.8.1.jar"
-      # install aws-cloudformation-rpdk
-      - pip install cloudformation-cli cloudformation-cli-java-plugin
-# TODO: add end-to-end test child repo and final build step
+      - cd "$CODEBUILD_SRC_DIR/globalnetwork"
+      - mvn clean verify --no-transfer-progress
+#    finally:
+#      - cat "$CODEBUILD_SRC_DIR/globalnetwork/rpdk.log"
