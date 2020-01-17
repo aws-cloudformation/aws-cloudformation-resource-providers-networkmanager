@@ -9,7 +9,7 @@ phases:
   build:
     commands:
       - pre-commit run --all-files
-      - cd "$CODEBUILD_SRC_DIR/globalnetwork"
-      - mvn clean verify --no-transfer-progress
+#      - cd "$CODEBUILD_SRC_DIR/globalnetwork"
+#      - mvn clean verify --no-transfer-progress
 #    finally:
 #      - cat "$CODEBUILD_SRC_DIR/globalnetwork/rpdk.log"
