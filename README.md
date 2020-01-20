@@ -1,13 +1,7 @@
-## My Project
+## AWS Cloudformation Resource Providers Network Manager
 
-TODO: Fill this README out!
-
-Be sure to:
-
-* Change the title in this README
-* Edit your repository description on GitHub
+The CloudFormation Resource Provider Package For Network Manager.
 
 ## License
 
 This project is licensed under the Apache-2.0 License.
-
