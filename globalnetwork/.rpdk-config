@@ -1,0 +1,15 @@
+{
+    "typeName": "AWS::NetworkManager::GlobalNetwork",
+    "language": "java",
+    "runtime": "java8",
+    "entrypoint": "com.amazonaws.networkmanager.globalnetwork.HandlerWrapper::handleRequest",
+    "testEntrypoint": "com.amazonaws.networkmanager.globalnetwork.HandlerWrapper::testEntrypoint",
+    "settings": {
+        "namespace": [
+            "com",
+            "amazonaws",
+            "networkmanager",
+            "globalnetwork"
+        ]
+    }
+}
