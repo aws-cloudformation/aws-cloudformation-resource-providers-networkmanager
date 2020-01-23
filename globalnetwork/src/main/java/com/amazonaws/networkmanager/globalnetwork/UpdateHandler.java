@@ -27,14 +27,14 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
             final ResourceHandlerRequest<ResourceModel> request,
             final CallbackContext callbackContext,
             final Logger logger) {
-        // intitate the request
+        // Initiate the request
         final ResourceModel model = request.getDesiredResourceState();
         request.getLogicalResourceIdentifier();
         final NetworkManagerClient client = ClientBuilder.getClient();
         final UpdateGlobalNetworkResponse updateGlobalNetworkResponse;
 
         try {
-            // Update desctrition
+            // Update description
             updateGlobalNetwork(client, model, proxy);
             // Update Tags
             updateTags(client, model, proxy);
@@ -42,7 +42,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
             return ProgressEvent.defaultFailureHandler(e, ExceptionMapper.mapToHandlerErrorCode(e));
         }
 
-        logger.log(String.format("%s [%s] creation succeeded", ResourceModel.TYPE_NAME, model.getPrimaryIdentifier()));
+        logger.log(String.format("%s [%s] update succeeded", ResourceModel.TYPE_NAME, model.getPrimaryIdentifier()));
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .resourceModel(model)
                 .status(OperationStatus.SUCCESS)
@@ -63,7 +63,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
     private void updateTags(final NetworkManagerClient client,
                             final ResourceModel model,
                             final AmazonWebServicesClientProxy proxy) {
-        //get current tags
+        // Get current tags
         final ListTagsForResourceRequest listTagsForResource =
                 ListTagsForResourceRequest.builder()
                         .resourceArn(model.getArn())
@@ -72,7 +72,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
         final Set<Tag> previousTags = new HashSet<>(listTagsForResourceResponse.tagList());
         final Set<Tag> desiredTags = new HashSet<>(Utils.tagTransform(model.getTags()));
 
-        //remove tag
+        // Remove tag
         final Set<Tag> tagsToRemove = Sets.difference(previousTags, desiredTags);
         final Set<String> keysToRemove = tagsToRemove.stream().map(Tag::key).collect(Collectors.toSet());
         final UntagResourceRequest untagResourceRequest =
@@ -82,7 +82,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
                         .build();
         proxy.injectCredentialsAndInvokeV2(untagResourceRequest, client::untagResource);
 
-        //add tag
+        // Add tag
         final TagResourceRequest tagResourceRequest =
                 TagResourceRequest.builder()
                         .resourceArn(model.getArn())

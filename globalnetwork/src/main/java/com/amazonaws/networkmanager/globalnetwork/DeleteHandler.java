@@ -17,11 +17,11 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
         final ResourceHandlerRequest<ResourceModel> request,
         final CallbackContext callbackContext,
         final Logger logger) {
-        // intitate the request
+        // Initiate the request
         final ResourceModel model = request.getDesiredResourceState();
         final NetworkManagerClient client = ClientBuilder.getClient();
         final DeleteGlobalNetworkResponse deleteGlobalNetworkResponse;
-        // delete the globalNetwork
+        // Delete the globalNetwork
         try {
             deleteGlobalNetworkResponse = deleteGlobalNetwork(client, model, proxy);
         } catch (final Exception e) {

@@ -18,19 +18,19 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             final ResourceHandlerRequest<ResourceModel> request,
             final CallbackContext callbackContext,
             final Logger logger) {
-        // intitate the request
+        // Initiate the request
         final ResourceModel model = request.getDesiredResourceState();
         final NetworkManagerClient client = ClientBuilder.getClient();
         final CreateGlobalNetworkResponse createGlobalNetworkResponse;
 
-        //create global network
+        // Create global network
         try {
             createGlobalNetworkResponse = createGlobalNetwork(client, model, proxy);
         } catch (final Exception e) {
             return ProgressEvent.defaultFailureHandler(e, ExceptionMapper.mapToHandlerErrorCode(e));
         }
 
-        // configure the response CFN resource model; Future enhancement: add State if needed
+        // Configure the response CFN resource model; Future enhancement: add State if needed
         model.setArn(createGlobalNetworkResponse.globalNetwork().globalNetworkArn());
         model.setId(createGlobalNetworkResponse.globalNetwork().globalNetworkId());
 

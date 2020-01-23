@@ -22,13 +22,13 @@ public class ListHandler extends BaseHandler<CallbackContext> {
             final ResourceHandlerRequest<ResourceModel> request,
             final CallbackContext callbackContext,
             final Logger logger) {
-        // intitate the request
+        // Initiate the request
         String nextToken = request.getNextToken();
         final ResourceModel model = request.getDesiredResourceState();
         final NetworkManagerClient client = ClientBuilder.getClient();
-        final List<ResourceModel> listResult = new ArrayList<>(); //should return empty list if no global network returned
+        final List<ResourceModel> listResult = new ArrayList<>(); // Should return empty list if no global network returned
 
-        // list the global networks
+        // List the global networks
         try {
             final DescribeGlobalNetworksResponse describeGlobalNetworksResponse = describeGlobalNetworks(client, nextToken, proxy);
             nextToken = describeGlobalNetworksResponse.nextToken();
