@@ -29,7 +29,6 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
             final Logger logger) {
         // Initiate the request
         final ResourceModel model = request.getDesiredResourceState();
-        request.getLogicalResourceIdentifier();
         final NetworkManagerClient client = ClientBuilder.getClient();
         final UpdateGlobalNetworkResponse updateGlobalNetworkResponse;
 
@@ -70,7 +69,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
                         .build();
         final ListTagsForResourceResponse listTagsForResourceResponse = proxy.injectCredentialsAndInvokeV2(listTagsForResource, client::listTagsForResource);
         final Set<Tag> previousTags = new HashSet<>(listTagsForResourceResponse.tagList());
-        final Set<Tag> desiredTags = new HashSet<>(Utils.tagTransform(model.getTags()));
+        final Set<Tag> desiredTags = new HashSet<>(Utils.cfnTagsToSdkTags(model.getTags()));
 
         // Remove tag
         final Set<Tag> tagsToRemove = Sets.difference(previousTags, desiredTags);

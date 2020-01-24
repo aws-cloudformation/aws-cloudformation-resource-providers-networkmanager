@@ -47,7 +47,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         final CreateGlobalNetworkRequest createGlobalNetworkRequest =
                 CreateGlobalNetworkRequest.builder()
                         .description(model.getDescription())
-                        .tags(Utils.tagTransform(model.getTags()))
+                        .tags(Utils.cfnTagsToSdkTags(model.getTags()))
                         .build();
         return proxy.injectCredentialsAndInvokeV2(createGlobalNetworkRequest, client::createGlobalNetwork);
     }

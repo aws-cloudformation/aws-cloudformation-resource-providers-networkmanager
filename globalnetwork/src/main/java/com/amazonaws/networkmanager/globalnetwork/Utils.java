@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 
 final class Utils {
     /**
-     * Converter method to convert Set<Tag1> to Collection<Tag2>
+     * Converter method to convert List<Tag1> to Collection<Tag2>
      * where Tag1 is cloudformation Tag object and Tag2 is NetworkManager SDK Tag object
      */
-    static Collection<Tag> tagTransform(final List<com.amazonaws.networkmanager.globalnetwork.Tag> tags) {
+    static Collection<Tag> cfnTagsToSdkTags(final List<com.amazonaws.networkmanager.globalnetwork.Tag> tags) {
         if (tags == null) return null;
         final Collection<Tag> networkManagerTags =
                 tags.stream()
@@ -25,10 +25,10 @@ final class Utils {
     }
 
     /**
-     * Converter method to convert Set<Tag1> to Collection<Tag2>
-     * where Tag1 is cloudformation Tag object and Tag2 is NetworkManager SDK Tag object
+     * Converter method to convert List<Tag1> to List<Tag2>
+     * where Tag1 is NetworkManager SDK Tag object and Tag2 is cloudformation Tag object
      */
-    static List<com.amazonaws.networkmanager.globalnetwork.Tag> tagTransformCFN(final List<Tag> tags) {
+    static List<com.amazonaws.networkmanager.globalnetwork.Tag> sdkTagsToCfnTags(final List<Tag> tags) {
         if (tags == null) return null;
         final List<com.amazonaws.networkmanager.globalnetwork.Tag> cfnTags =
                 tags.stream()
@@ -46,12 +46,10 @@ final class Utils {
         final ResourceModel resourceModel = ResourceModel.builder().build();
 
         resourceModel.setDescription(globalNetwork.description());
-        resourceModel.setTags(Utils.tagTransformCFN(globalNetwork.tags()));
+        resourceModel.setTags(Utils.sdkTagsToCfnTags(globalNetwork.tags()));
         resourceModel.setArn(globalNetwork.globalNetworkArn());
         resourceModel.setId(globalNetwork.globalNetworkId());
         return resourceModel;
     }
-
-
 
 }

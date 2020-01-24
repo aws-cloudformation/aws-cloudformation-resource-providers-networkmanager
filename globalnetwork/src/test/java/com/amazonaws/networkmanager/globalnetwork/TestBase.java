@@ -21,8 +21,8 @@ import static org.mockito.Mockito.mock;
  */
 public class TestBase {
 
-    protected final static String GLOBAL_NETWORK_ARN = "arn::networkmanager/globalnetwork";
-    protected final static String GLOBAL_NETWORK_ID = "globalNetworkId";
+    protected final static String GLOBAL_NETWORK_ARN = "arn:aws:networkmanager::039868373529:global-network/global-network-0b84f0efa26317dda";
+    protected final static String GLOBAL_NETWORK_ID = "global-network-0b84f0efa26317dda";
     protected final static String DESCRIPTION = "description";
     protected final static String TAG_KEY_1 = "testKey1";
     protected final static String TAG_KEY_2 = "testKey2";
@@ -98,7 +98,5 @@ public class TestBase {
         tags.add(t2);
         return tags;
     }
-
-
 
 }

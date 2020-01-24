@@ -24,7 +24,6 @@ public class ListHandler extends BaseHandler<CallbackContext> {
             final Logger logger) {
         // Initiate the request
         String nextToken = request.getNextToken();
-        final ResourceModel model = request.getDesiredResourceState();
         final NetworkManagerClient client = ClientBuilder.getClient();
         final List<ResourceModel> listResult = new ArrayList<>(); // Should return empty list if no global network returned
 
@@ -39,7 +38,7 @@ public class ListHandler extends BaseHandler<CallbackContext> {
             return ProgressEvent.defaultFailureHandler(e, ExceptionMapper.mapToHandlerErrorCode(e));
         }
 
-        logger.log(String.format("%s [%s] list succeeded", ResourceModel.TYPE_NAME, model.getPrimaryIdentifier()));
+        logger.log(String.format("%s list succeeded", ResourceModel.TYPE_NAME));
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .resourceModels(listResult)
                 .nextToken(nextToken)

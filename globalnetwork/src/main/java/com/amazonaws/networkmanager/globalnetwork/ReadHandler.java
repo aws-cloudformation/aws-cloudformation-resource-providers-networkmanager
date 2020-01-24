@@ -25,7 +25,9 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
 
         // describe global network
         try {
-            readResult = describeGlobalNetwork(client, model, proxy);
+            final DescribeGlobalNetworksResponse describeGlobalNetworksResponse = describeGlobalNetwork(client, model, proxy);
+            final GlobalNetwork globalNetwork = describeGlobalNetworksResponse.globalNetworks().get(0);
+            readResult = Utils.transformGlobalNetwork(globalNetwork);
         } catch (final Exception e) {
             return ProgressEvent.defaultFailureHandler(e, ExceptionMapper.mapToHandlerErrorCode(e));
         }
@@ -37,16 +39,12 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
                 .build();
     }
 
-    private ResourceModel describeGlobalNetwork(final NetworkManagerClient client,
+    private DescribeGlobalNetworksResponse describeGlobalNetwork(final NetworkManagerClient client,
                                                 final ResourceModel model,
                                                 final AmazonWebServicesClientProxy proxy) {
         final DescribeGlobalNetworksRequest describeGlobalNetworksRequest = DescribeGlobalNetworksRequest.builder()
                 .globalNetworkIds(model.getId())
                 .build();
-        final DescribeGlobalNetworksResponse describeGlobalNetworksResponse = proxy.injectCredentialsAndInvokeV2(describeGlobalNetworksRequest, client::describeGlobalNetworks);
-        final GlobalNetwork globalNetwork = describeGlobalNetworksResponse.globalNetworks().get(0);
-
-        return Utils.transformGlobalNetwork(globalNetwork);
-
+        return proxy.injectCredentialsAndInvokeV2(describeGlobalNetworksRequest, client::describeGlobalNetworks);
     }
 }

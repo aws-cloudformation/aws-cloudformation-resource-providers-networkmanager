@@ -12,7 +12,7 @@ public class UtilsTest extends TestBase {
     @Test
     void testTagTransform() {
         final List<com.amazonaws.networkmanager.globalnetwork.Tag> tags = createTags();
-        final Collection<Tag> networkManagerTags = Utils.tagTransform(tags);
+        final Collection<Tag> networkManagerTags = Utils.cfnTagsToSdkTags(tags);
         assertEquals(networkManagerTags, createNetworkManagerTags());
     }
 }
