@@ -25,7 +25,7 @@ public class DeleteHandlerTest extends TestBase {
     @BeforeEach
     public void setup() {
         handler = new DeleteHandler();
-        model = buildDeleteOrReadResourceModel();
+        model = buildResourceModelWithOnlyId();
     }
 
     @Test

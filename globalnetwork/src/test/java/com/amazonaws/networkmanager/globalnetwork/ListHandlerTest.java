@@ -6,6 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import software.amazon.awssdk.services.networkmanager.model.DescribeGlobalNetworksRequest;
 import software.amazon.awssdk.services.networkmanager.model.DescribeGlobalNetworksResponse;
+import software.amazon.awssdk.services.networkmanager.model.ResourceNotFoundException;
+import software.amazon.cloudformation.proxy.HandlerErrorCode;
 import software.amazon.cloudformation.proxy.OperationStatus;
 import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
@@ -13,6 +15,7 @@ import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 
 @ExtendWith(MockitoExtension.class)
 public class ListHandlerTest extends TestBase {
@@ -59,9 +62,8 @@ public class ListHandlerTest extends TestBase {
      */
     @Test
     public void handleRequest_NoResourceFound() {
-        final DescribeGlobalNetworksResponse describeGlobalNetworksResponse = DescribeGlobalNetworksResponse.builder()
-                .build();
-        doReturn(describeGlobalNetworksResponse)
+        final ResourceNotFoundException exception = ResourceNotFoundException.builder().build();
+        doThrow(exception)
                 .when(proxy)
                 .injectCredentialsAndInvokeV2(any(DescribeGlobalNetworksRequest.class), any());
         final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
@@ -72,11 +74,8 @@ public class ListHandlerTest extends TestBase {
                 = handler.handleRequest(proxy, request, context, logger);
 
         assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isEqualTo(OperationStatus.SUCCESS);
-        assertThat(response.getResourceModel()).isNull();
-        assertThat(response.getResourceModels().isEmpty());
-        assertThat(response.getResourceModels() != null);
-
+        assertThat(response.getStatus()).isEqualTo(OperationStatus.FAILED);
+        assertThat(response.getErrorCode()).isEqualTo(HandlerErrorCode.NotFound);
     }
 
 }
