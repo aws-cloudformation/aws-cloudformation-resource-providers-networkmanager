@@ -41,7 +41,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
 
         try {
             // Update description
-            updateGlobalNetworkResponse= updateGlobalNetwork(client, model, proxy);
+            updateGlobalNetworkResponse = updateGlobalNetwork(client, model, proxy);
             // Update Tags
             updateTags(client, updateGlobalNetworkResponse.globalNetwork().globalNetworkArn(), proxy, model);
         } catch (final Exception e) {
@@ -91,11 +91,11 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
                         .resourceArn(arn)
                         .build();
         final ListTagsForResourceResponse listTagsForResourceResponse = proxy.injectCredentialsAndInvokeV2(listTagsForResource, client::listTagsForResource);
-        final Set<Tag> previousTags = new HashSet<>(listTagsForResourceResponse.tagList());
+        final Set<Tag> currentTags = new HashSet<>(listTagsForResourceResponse.tagList());
         final Set<Tag> desiredTags = new HashSet<>(Utils.cfnTagsToSdkTags(model.getTags()));
 
         // Remove tag
-        final Set<Tag> tagsToRemove = Sets.difference(previousTags, desiredTags);
+        final Set<Tag> tagsToRemove = Sets.difference(currentTags, desiredTags);
         if(tagsToRemove.isEmpty()) {
             return;
         }
