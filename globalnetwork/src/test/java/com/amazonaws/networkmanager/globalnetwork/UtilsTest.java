@@ -11,8 +11,8 @@ import static junit.framework.Assert.assertEquals;
 public class UtilsTest extends TestBase {
     @Test
     void testTagTransform() {
-        final List<com.amazonaws.networkmanager.globalnetwork.Tag> tags = createTags();
+        final List<com.amazonaws.networkmanager.globalnetwork.Tag> tags = createTagsWithOneTag();
         final Collection<Tag> networkManagerTags = Utils.cfnTagsToSdkTags(tags);
-        assertEquals(networkManagerTags, createNetworkManagerTags());
+        assertEquals(networkManagerTags, createNetworkManagerTagsWithOneTag());
     }
 }

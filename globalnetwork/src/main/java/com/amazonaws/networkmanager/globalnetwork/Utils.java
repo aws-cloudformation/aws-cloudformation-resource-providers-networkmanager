@@ -3,18 +3,17 @@ package com.amazonaws.networkmanager.globalnetwork;
 import software.amazon.awssdk.services.networkmanager.model.GlobalNetwork;
 import software.amazon.awssdk.services.networkmanager.model.Tag;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 final class Utils {
     /**
-     * Converter method to convert List<Tag1> to Collection<Tag2>
+     * Converter method to convert List<Tag1> to List<Tag2>
      * where Tag1 is cloudformation Tag object and Tag2 is NetworkManager SDK Tag object
      */
-    static Collection<Tag> cfnTagsToSdkTags(final List<com.amazonaws.networkmanager.globalnetwork.Tag> tags) {
+    static List<Tag> cfnTagsToSdkTags(final List<com.amazonaws.networkmanager.globalnetwork.Tag> tags) {
         if (tags == null) return null;
-        final Collection<Tag> networkManagerTags =
+        final List<Tag> networkManagerTags =
                 tags.stream()
                         .map(e -> Tag.builder()
                                 .key(e.getKey())

@@ -23,6 +23,7 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
+                - "iam:CreateServiceLinkedRole"
                 - "networkmanager:CreateGlobalNetwork"
                 - "networkmanager:DeleteGlobalNetwork"
                 - "networkmanager:DescribeGlobalNetworks"
