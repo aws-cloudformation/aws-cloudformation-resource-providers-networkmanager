@@ -27,18 +27,32 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
             final ResourceHandlerRequest<ResourceModel> request,
             final CallbackContext callbackContext,
             final Logger logger) {
-        // Initiate the request
-        final ResourceModel model = request.getDesiredResourceState();
+        final ResourceModel model;
+        if(callbackContext == null) {
+            // Initiate the request for Update
+            model = request.getDesiredResourceState();
+        } else {
+            // CallBack initiated: Revert to the previous resource state
+            model = request.getPreviousResourceState();
+        }
+
         final NetworkManagerClient client = ClientBuilder.getClient();
         final UpdateGlobalNetworkResponse updateGlobalNetworkResponse;
 
         try {
             // Update description
-            updateGlobalNetwork(client, model, proxy);
+            updateGlobalNetworkResponse= updateGlobalNetwork(client, model, proxy);
             // Update Tags
-            updateTags(client, model, proxy);
+            updateTags(client, updateGlobalNetworkResponse.globalNetwork().globalNetworkArn(), proxy, model);
         } catch (final Exception e) {
-            return ProgressEvent.defaultFailureHandler(e, ExceptionMapper.mapToHandlerErrorCode(e));
+            return ProgressEvent.<ResourceModel, CallbackContext>builder()
+                    .resourceModel(model)
+                    .status(OperationStatus.FAILED)
+                    .errorCode(ExceptionMapper.mapToHandlerErrorCode(e))
+                    .message(e.getMessage())
+                    // For failure update: adding CallBackContext to revert to the last version
+                    .callbackContext(callbackContext == null ? CallbackContext.builder().build() : null)
+                    .build();
         }
 
         logger.log(String.format("%s [%s] update succeeded", ResourceModel.TYPE_NAME, model.getPrimaryIdentifier()));
@@ -60,12 +74,21 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
     }
 
     private void updateTags(final NetworkManagerClient client,
-                            final ResourceModel model,
-                            final AmazonWebServicesClientProxy proxy) {
+                            final String arn,
+                            final AmazonWebServicesClientProxy proxy,
+                            final ResourceModel model) {
+        // Add tag
+        final TagResourceRequest tagResourceRequest =
+                TagResourceRequest.builder()
+                        .resourceArn(arn)
+                        .tags(Utils.cfnTagsToSdkTags(model.getTags()))
+                        .build();
+        proxy.injectCredentialsAndInvokeV2(tagResourceRequest, client::tagResource);
+
         // Get current tags
         final ListTagsForResourceRequest listTagsForResource =
                 ListTagsForResourceRequest.builder()
-                        .resourceArn(model.getArn())
+                        .resourceArn(arn)
                         .build();
         final ListTagsForResourceResponse listTagsForResourceResponse = proxy.injectCredentialsAndInvokeV2(listTagsForResource, client::listTagsForResource);
         final Set<Tag> previousTags = new HashSet<>(listTagsForResourceResponse.tagList());
@@ -73,21 +96,16 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
 
         // Remove tag
         final Set<Tag> tagsToRemove = Sets.difference(previousTags, desiredTags);
+        if(tagsToRemove.isEmpty()) {
+            return;
+        }
         final Set<String> keysToRemove = tagsToRemove.stream().map(Tag::key).collect(Collectors.toSet());
         final UntagResourceRequest untagResourceRequest =
                 UntagResourceRequest.builder()
-                        .resourceArn(model.getArn())
+                        .resourceArn(arn)
                         .tagKeys(keysToRemove)
                         .build();
         proxy.injectCredentialsAndInvokeV2(untagResourceRequest, client::untagResource);
-
-        // Add tag
-        final TagResourceRequest tagResourceRequest =
-                TagResourceRequest.builder()
-                        .resourceArn(model.getArn())
-                        .tags(desiredTags)
-                        .build();
-        proxy.injectCredentialsAndInvokeV2(tagResourceRequest, client::tagResource);
 
     }
 

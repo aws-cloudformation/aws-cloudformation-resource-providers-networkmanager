@@ -43,7 +43,7 @@ public class UpdateHandlerTest extends TestBase {
                 .build();
         final TagResourceResponse tagResourceResponse = TagResourceResponse.builder().build();
         final UntagResourceResponse untagResourceResponse = UntagResourceResponse.builder().build();
-        final ListTagsForResourceResponse listTagsForResourceResponse = ListTagsForResourceResponse.builder().build();
+        final ListTagsForResourceResponse listTagsForResourceResponse = ListTagsForResourceResponse.builder().tagList(createNetworkManagerTagsWithTwoTags()).build();
         doReturn(updateGlobalNetworkResponse)
                 .when(proxy)
                 .injectCredentialsAndInvokeV2(any(UpdateGlobalNetworkRequest.class), any());
@@ -60,9 +60,8 @@ public class UpdateHandlerTest extends TestBase {
                 .desiredResourceState(model)
                 .build();
 
-        ProgressEvent<ResourceModel, CallbackContext> response
+        final ProgressEvent<ResourceModel, CallbackContext> response
                 = handler.handleRequest(proxy, request, context, logger);
-        System.out.println(response);
         assertThat(response).isNotNull();
         assertThat(response.getStatus()).isEqualTo(OperationStatus.SUCCESS);
         assertThat(response.getResourceModel().getDescription()).isEqualTo(DESCRIPTION);
@@ -81,12 +80,37 @@ public class UpdateHandlerTest extends TestBase {
                 .desiredResourceState(model)
                 .build();
 
-        ProgressEvent<ResourceModel, CallbackContext> response
+        final ProgressEvent<ResourceModel, CallbackContext> response
                 = handler.handleRequest(proxy, request, context, logger);
-        System.out.println(response);
         assertThat(response).isNotNull();
         assertThat(response.getStatus()).isEqualTo(OperationStatus.FAILED);
         assertThat(response.getErrorCode()).isEqualTo(HandlerErrorCode.NotFound);
+    }
 
+    @Test
+    public void handleRequest_NoTagsToRemoveBranch() {
+        final UpdateGlobalNetworkResponse updateGlobalNetworkResponse = UpdateGlobalNetworkResponse.builder()
+                .globalNetwork(buildGlobalNetwork())
+                .build();
+        final TagResourceResponse tagResourceResponse = TagResourceResponse.builder().build();
+        final ListTagsForResourceResponse listTagsForResourceResponse = ListTagsForResourceResponse.builder().tagList(createNetworkManagerTagsWithOneTag()).build();
+        doReturn(updateGlobalNetworkResponse)
+                .when(proxy)
+                .injectCredentialsAndInvokeV2(any(UpdateGlobalNetworkRequest.class), any());
+        doReturn(tagResourceResponse)
+                .when(proxy)
+                .injectCredentialsAndInvokeV2(any(TagResourceRequest.class), any());
+        doReturn(listTagsForResourceResponse)
+                .when(proxy)
+                .injectCredentialsAndInvokeV2(any(ListTagsForResourceRequest.class), any());
+        final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
+                .desiredResourceState(model)
+                .build();
+
+        final ProgressEvent<ResourceModel, CallbackContext> response
+                = handler.handleRequest(proxy, request, context, logger);
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(OperationStatus.SUCCESS);
+        assertThat(response.getResourceModel().getDescription()).isEqualTo(DESCRIPTION);
     }
 }

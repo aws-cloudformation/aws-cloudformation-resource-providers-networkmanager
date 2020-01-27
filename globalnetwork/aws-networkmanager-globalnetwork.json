@@ -45,11 +45,17 @@
   "primaryIdentifier": [
     "/properties/Id"
   ],
+  "additionalIdentifiers": [
+    [
+      "/properties/Arn"
+    ]
+  ],
   "handlers": {
     "create": {
       "permissions": [
         "networkmanager:CreateGlobalNetwork",
-        "networkmanager:DescribeGlobalNetworks"
+        "networkmanager:DescribeGlobalNetworks",
+        "iam:CreateServiceLinkedRole"
       ]
     },
     "read": {

@@ -1,14 +1,11 @@
 package com.amazonaws.networkmanager.globalnetwork;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.mockito.Mock;
 import software.amazon.awssdk.services.networkmanager.model.GlobalNetwork;
 import software.amazon.awssdk.services.networkmanager.model.Tag;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
-import software.amazon.cloudformation.proxy.LoggerProxy;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,7 +45,7 @@ public class TestBase {
     protected ResourceModel buildCreateResourceModel() {
         return ResourceModel.builder()
                 .description(DESCRIPTION)
-                .tags(createTags())
+                .tags(createTagsWithOneTag())
                 .build();
     }
 
@@ -62,7 +59,7 @@ public class TestBase {
         return ResourceModel.builder()
                 .id(GLOBAL_NETWORK_ID)
                 .description(DESCRIPTION)
-                .tags(createTags())
+                .tags(createTagsWithOneTag())
                 .build();
     }
 
@@ -70,7 +67,7 @@ public class TestBase {
         return GlobalNetwork.builder()
                 .description(DESCRIPTION)
                 .globalNetworkArn(GLOBAL_NETWORK_ARN)
-                .tags(createNetworkManagerTags())
+                .tags(createNetworkManagerTagsWithTwoTags())
                 .globalNetworkId(GLOBAL_NETWORK_ID)
                 .build();
     }
@@ -82,15 +79,21 @@ public class TestBase {
                 .build();
     }
 
-    protected List<com.amazonaws.networkmanager.globalnetwork.Tag> createTags() {
+    protected List<com.amazonaws.networkmanager.globalnetwork.Tag> createTagsWithOneTag() {
         List<com.amazonaws.networkmanager.globalnetwork.Tag> tags = new ArrayList<>();
         com.amazonaws.networkmanager.globalnetwork.Tag t1 = new com.amazonaws.networkmanager.globalnetwork.Tag(TAG_KEY_1, TAG_VALUE_1);
-        com.amazonaws.networkmanager.globalnetwork.Tag t2 = new com.amazonaws.networkmanager.globalnetwork.Tag(TAG_KEY_2, TAG_VALUE_2);
         tags.add(t1);
-        tags.add(t2);
         return tags;
     }
-    protected Collection<Tag> createNetworkManagerTags() {
+
+    protected Collection<Tag> createNetworkManagerTagsWithOneTag() {
+        final List<Tag> tags = new ArrayList<>();
+        final Tag t1 = software.amazon.awssdk.services.networkmanager.model.Tag.builder().key(TAG_KEY_1).value(TAG_VALUE_1).build();
+        tags.add(t1);
+        return tags;
+    }
+
+    protected Collection<Tag> createNetworkManagerTagsWithTwoTags() {
         final List<Tag> tags = new ArrayList<>();
         final Tag t1 = software.amazon.awssdk.services.networkmanager.model.Tag.builder().key(TAG_KEY_1).value(TAG_VALUE_1).build();
         final Tag t2 = software.amazon.awssdk.services.networkmanager.model.Tag.builder().key(TAG_KEY_2).value(TAG_VALUE_2).build();
