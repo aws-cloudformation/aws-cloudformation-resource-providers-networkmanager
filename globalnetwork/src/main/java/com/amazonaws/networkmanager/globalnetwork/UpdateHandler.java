@@ -28,12 +28,13 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
             final CallbackContext callbackContext,
             final Logger logger) {
         final ResourceModel model;
-        if(callbackContext == null) {
-            // Initiate the request for Update
-            model = request.getDesiredResourceState();
-        } else {
+        if(callbackContext != null && callbackContext.isUpdateFailed()) {
             // CallBack initiated: Revert to the previous resource state
             model = request.getPreviousResourceState();
+        } else {
+            // Initiate the request for Update
+            model = request.getDesiredResourceState();
+
         }
 
         final NetworkManagerClient client = ClientBuilder.getClient();
@@ -43,7 +44,9 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
             // Update description
             updateGlobalNetworkResponse = updateGlobalNetwork(client, model, proxy);
             // Update Tags
-            updateTags(client, updateGlobalNetworkResponse.globalNetwork().globalNetworkArn(), proxy, model);
+            if(model.getTags() != null && !model.getTags().isEmpty()){
+                updateTags(client, updateGlobalNetworkResponse.globalNetwork().globalNetworkArn(), proxy, model);
+            }
         } catch (final Exception e) {
             return ProgressEvent.<ResourceModel, CallbackContext>builder()
                     .resourceModel(model)
@@ -51,7 +54,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
                     .errorCode(ExceptionMapper.mapToHandlerErrorCode(e))
                     .message(e.getMessage())
                     // For failure update: adding CallBackContext to revert to the last version
-                    .callbackContext(callbackContext == null ? CallbackContext.builder().build() : null)
+                    .callbackContext(callbackContext == null ? CallbackContext.builder().updateFailed(true).build() : null)
                     .build();
         }
 

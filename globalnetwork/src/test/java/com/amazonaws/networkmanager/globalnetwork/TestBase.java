@@ -38,8 +38,7 @@ public class TestBase {
     public void setup() {
         proxy = mock(AmazonWebServicesClientProxy.class);
         logger = mock(Logger.class);
-        context = CallbackContext.builder()
-                .build();
+        context = null;
     }
 
     protected ResourceModel buildCreateResourceModel() {
@@ -49,7 +48,7 @@ public class TestBase {
                 .build();
     }
 
-    protected ResourceModel buildDeleteOrReadResourceModel() {
+    protected ResourceModel buildResourceModelWithOnlyId() {
         return ResourceModel.builder()
                 .id(GLOBAL_NETWORK_ID)
                 .build();
@@ -68,13 +67,6 @@ public class TestBase {
                 .description(DESCRIPTION)
                 .globalNetworkArn(GLOBAL_NETWORK_ARN)
                 .tags(createNetworkManagerTagsWithTwoTags())
-                .globalNetworkId(GLOBAL_NETWORK_ID)
-                .build();
-    }
-    protected GlobalNetwork buildNoDescriptionGlobalNetwork() {
-        return GlobalNetwork.builder()
-                .globalNetworkArn(GLOBAL_NETWORK_ARN)
-                .description(null)
                 .globalNetworkId(GLOBAL_NETWORK_ID)
                 .build();
     }

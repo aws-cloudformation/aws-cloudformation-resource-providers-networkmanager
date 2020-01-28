@@ -26,7 +26,7 @@ public class ReadHandlerTest extends TestBase {
     @BeforeEach
     public void setup() {
         handler = new ReadHandler();
-        model = buildDeleteOrReadResourceModel();
+        model = buildResourceModelWithOnlyId();
     }
 
     @Test
@@ -62,9 +62,6 @@ public class ReadHandlerTest extends TestBase {
      */
     @Test
     public void handleRequest_ResourceNotFound() {
-        final DescribeGlobalNetworksResponse describeGlobalNetworksResponse = DescribeGlobalNetworksResponse.builder()
-                .globalNetworks(buildGlobalNetwork())
-                .build();
         final ResourceNotFoundException exception = ResourceNotFoundException.builder().build();
         doThrow(exception)
                 .when(proxy)
@@ -79,12 +76,9 @@ public class ReadHandlerTest extends TestBase {
         assertThat(response).isNotNull();
         assertThat(response.getStatus()).isEqualTo(OperationStatus.FAILED);
         assertThat(response.getCallbackContext()).isNull();
-        assertThat(response.getCallbackDelaySeconds()).isEqualTo(0);
         assertThat(response.getResourceModels()).isNull();
         assertThat(response.getMessage()).isNull();
         assertThat(response.getErrorCode()).isEqualTo(HandlerErrorCode.NotFound);
-
     }
-
 
 }
