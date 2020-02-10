@@ -106,8 +106,7 @@
   "handlers": {
     "create": {
       "permissions": [
-        "networkmanager:CreateDevice",
-        "iam:CreateServiceLinkedRole"
+        "networkmanager:CreateDevice"
       ]
     },
     "read": {

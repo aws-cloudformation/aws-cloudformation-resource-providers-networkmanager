@@ -51,7 +51,8 @@ final class Utils {
      */
     static ResourceModel transformDevice(final Device device) {
         return ResourceModel.builder()
-                .deviceId(device.deviceArn())
+                .deviceId(device.deviceId())
+                .deviceArn(device.deviceArn())
                 .globalNetworkId(device.globalNetworkId())
                 .siteId(device.siteId())
                 .description(device.description())

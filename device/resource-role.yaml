@@ -23,7 +23,6 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                - "iam:CreateServiceLinkedRole"
                 - "networkmanager:CreateDevice"
                 - "networkmanager:DeleteDevice"
                 - "networkmanager:GetDevices"
