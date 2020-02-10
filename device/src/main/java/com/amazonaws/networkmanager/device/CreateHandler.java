@@ -1,7 +1,7 @@
 package com.amazonaws.networkmanager.device;
 
-import software.amazon.awssdk.services.networkmanager.model.CreateDeviceRequest;
 import software.amazon.awssdk.services.networkmanager.NetworkManagerClient;
+import software.amazon.awssdk.services.networkmanager.model.CreateDeviceRequest;
 import software.amazon.awssdk.services.networkmanager.model.CreateDeviceResponse;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
