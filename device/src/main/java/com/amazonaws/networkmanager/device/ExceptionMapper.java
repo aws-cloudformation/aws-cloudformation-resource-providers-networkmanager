@@ -16,6 +16,7 @@ public final class ExceptionMapper {
 
     /**
      * Translates the Network Manager's client exception to a Cfn Handler Error Code.
+     * Ref: https://w.amazon.com/bin/view/AWS21/Design/Uluru/HandlerContract
      */
     public static HandlerErrorCode mapToHandlerErrorCode(final Exception exception) {
         if (exception instanceof AccessDeniedException) {
