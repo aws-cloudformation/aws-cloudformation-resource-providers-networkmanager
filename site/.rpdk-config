@@ -1,0 +1,15 @@
+{
+    "typeName": "AWS::NetworkManager::Site",
+    "language": "java",
+    "runtime": "java8",
+    "entrypoint": "com.amazonaws.networkmanager.site.HandlerWrapper::handleRequest",
+    "testEntrypoint": "com.amazonaws.networkmanager.site.HandlerWrapper::testEntrypoint",
+    "settings": {
+        "namespace": [
+            "com",
+            "amazonaws",
+            "networkmanager",
+            "site"
+        ]
+    }
+}

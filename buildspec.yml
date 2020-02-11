@@ -13,5 +13,7 @@ phases:
       - mvn clean verify --no-transfer-progress
       - cd "$CODEBUILD_SRC_DIR/device"
       - mvn clean verify --no-transfer-progress
+      - cd "$CODEBUILD_SRC_DIR/site"
+      - mvn clean verify --no-transfer-progress
     finally:
       - cat "$CODEBUILD_SRC_DIR/globalnetwork/rpdk.log"

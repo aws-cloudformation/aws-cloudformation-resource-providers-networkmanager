@@ -1,9 +1,8 @@
-package com.amazonaws.networkmanager.device;
+package com.amazonaws.networkmanager.site;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
-import software.amazon.awssdk.services.networkmanager.model.Device;
-
+import software.amazon.awssdk.services.networkmanager.model.Site;
 import software.amazon.awssdk.services.networkmanager.model.Tag;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
@@ -19,13 +18,11 @@ import static org.mockito.Mockito.mock;
 public class TestBase {
 
     protected final static String GLOBAL_NETWORK_ID = "global-network-0da702142c70e2699";
-    protected final static String DEVICE_ID = "device-0d6e92168b1f83b83";
-    protected final static String DEVICE_ARN = "arn:aws:networkmanager::039868373529:device/global-network-0da702142c70e2699/device-0d6e92168b1f83b83";
+    protected final static String SITE_ID = "site-0d6e92168b1f83b83";
+    protected final static String SITE_ARN = "arn:aws:networkmanager::039868373529:site/global-network-0da702142c70e2699/site-0d6e92168b1f83b83";
     protected final static String DESCRIPTION = "description";
     protected final static String TAG_KEY_1 = "testKey1";
-    protected final static String TAG_KEY_2 = "testKey2";
     protected final static String TAG_VALUE_1 = "testKey1";
-    protected final static String TAG_VALUE_2 = "testKey2";
 
     protected CallbackContext context;
 
@@ -45,8 +42,8 @@ public class TestBase {
     protected ResourceModel buildResourceModel() {
         return ResourceModel.builder()
                 .globalNetworkId(GLOBAL_NETWORK_ID)
-                .deviceArn(DEVICE_ARN)
-                .deviceId(DEVICE_ID)
+                .siteArn(SITE_ARN)
+                .siteId(SITE_ID)
                 .location(Location.builder().build())
                 .description(DESCRIPTION)
                 .tags(createCloudformationTags())
@@ -54,37 +51,34 @@ public class TestBase {
                 .build();
     }
 
-
     protected ResourceModel buildSimpleResourceModel() {
         return ResourceModel.builder()
-                .deviceId(DEVICE_ID)
+                .siteId(SITE_ID)
                 .globalNetworkId(GLOBAL_NETWORK_ID)
                 .build();
     }
 
-
-    protected Device buildDevice() {
-        return Device.builder()
+    protected Site buildSite() {
+        return Site.builder()
                 .description(DESCRIPTION)
-                .deviceArn(DEVICE_ARN)
-                .deviceId(DEVICE_ID)
+                .siteArn(SITE_ARN)
+                .siteId(SITE_ID)
                 .location(Utils.transformLocation(Location.builder().build()))
                 .globalNetworkId(GLOBAL_NETWORK_ID)
                 .tags(createNetworkManagerTags())
                 .build();
     }
 
-    protected Device buildSimpleDevice() {
-        return Device.builder()
-                .deviceId(DEVICE_ID)
+    protected Site buildSimpleSite() {
+        return Site.builder()
+                .siteId(SITE_ID)
                 .globalNetworkId(GLOBAL_NETWORK_ID)
                 .build();
     }
 
-
-    protected List<com.amazonaws.networkmanager.device.Tag> createCloudformationTags() {
-        List<com.amazonaws.networkmanager.device.Tag> tags = new ArrayList<>();
-        com.amazonaws.networkmanager.device.Tag t1 = new com.amazonaws.networkmanager.device.Tag(TAG_KEY_1, TAG_VALUE_1);
+    protected List<com.amazonaws.networkmanager.site.Tag> createCloudformationTags() {
+        final List<com.amazonaws.networkmanager.site.Tag> tags = new ArrayList<>();
+        final com.amazonaws.networkmanager.site.Tag t1 = new com.amazonaws.networkmanager.site.Tag(TAG_KEY_1, TAG_VALUE_1);
         tags.add(t1);
         return tags;
     }
@@ -93,17 +87,6 @@ public class TestBase {
         final List<Tag> tags = new ArrayList<>();
         final Tag t1 = Tag.builder().key(TAG_KEY_1).value(TAG_VALUE_1).build();
         tags.add(t1);
-        System.out.println(tags);
-        return tags;
-    }
-    protected List<com.amazonaws.networkmanager.device.Tag> createCloudFormationTags() {
-        final List<com.amazonaws.networkmanager.device.Tag> tags = new ArrayList<>();
-        final com.amazonaws.networkmanager.device.Tag t1 = com.amazonaws.networkmanager.device.Tag.builder()
-                .key(TAG_KEY_1)
-                .value(TAG_VALUE_1)
-                .build();
-        tags.add(t1);
-        System.out.println(tags);
         return tags;
     }
 
