@@ -92,7 +92,6 @@ public class TestBase {
         final List<Tag> tags = new ArrayList<>();
         final Tag t1 = Tag.builder().key(TAG_KEY_1).value(TAG_VALUE_1).build();
         tags.add(t1);
-        System.out.println(tags);
         return tags;
     }
     protected List<com.amazonaws.networkmanager.site.Tag> createCloudFormationTags() {
@@ -102,7 +101,6 @@ public class TestBase {
                 .value(TAG_VALUE_1)
                 .build();
         tags.add(t1);
-        System.out.println(tags);
         return tags;
     }
 }
