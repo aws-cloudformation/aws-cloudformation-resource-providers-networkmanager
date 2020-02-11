@@ -80,6 +80,7 @@ public class CreateHandlerTest extends TestBase {
         final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
                 .desiredResourceState(model)
                 .build();
+
         final ProgressEvent<ResourceModel, CallbackContext> response
                 = handler.handleRequest(proxy, request, context, logger);
 
@@ -96,9 +97,10 @@ public class CreateHandlerTest extends TestBase {
         final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
                 .desiredResourceState(model)
                 .build();
+
         final ProgressEvent<ResourceModel, CallbackContext> response
                 = handler.handleRequest(proxy, request, context, logger);
-        assertThat(response).isNotNull();
+
         assertThat(response.getStatus()).isEqualTo(OperationStatus.FAILED);
         assertThat(response.getErrorCode()).isEqualTo(HandlerErrorCode.ResourceConflict);
     }
@@ -112,6 +114,7 @@ public class CreateHandlerTest extends TestBase {
         final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
                 .desiredResourceState(model)
                 .build();
+
         final ProgressEvent<ResourceModel, CallbackContext> response
                 = handler.handleRequest(proxy, request, context, logger);
 
@@ -125,7 +128,6 @@ public class CreateHandlerTest extends TestBase {
         doThrow(exception)
                 .when(proxy)
                 .injectCredentialsAndInvokeV2(any(CreateSiteRequest.class), any());
-
         final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
                 .desiredResourceState(model)
                 .build();
@@ -143,7 +145,6 @@ public class CreateHandlerTest extends TestBase {
         doThrow(exception)
                 .when(proxy)
                 .injectCredentialsAndInvokeV2(any(CreateSiteRequest.class), any());
-
         final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
                 .desiredResourceState(model)
                 .build();

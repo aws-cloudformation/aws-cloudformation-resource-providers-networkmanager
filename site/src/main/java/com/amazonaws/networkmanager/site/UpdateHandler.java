@@ -30,7 +30,6 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
             final ResourceHandlerRequest<ResourceModel> request,
             final CallbackContext callbackContext,
             final Logger logger) {
-
         final ResourceModel model;
         if (callbackContext != null && callbackContext.isUpdateFailed()) {
             // CallBack initiated: previous update failed, reverting to the previous resource state

@@ -13,6 +13,7 @@ public class UtilsTest extends TestBase {
     void testCfnToSdkTagTransform() {
         final List<com.amazonaws.networkmanager.site.Tag> tags = createCloudformationTags();
         final List<Tag> networkManagerTags = Utils.cfnTagsToSdkTags(tags);
+
         assertEquals(networkManagerTags, createNetworkManagerTags());
     }
 
@@ -20,6 +21,7 @@ public class UtilsTest extends TestBase {
     void testSdkToCfnTagTransform() {
         final List<Tag> tags = createNetworkManagerTags();
         final List<com.amazonaws.networkmanager.site.Tag> cloudformationTags = Utils.sdkTagsToCfnTags(tags);
+
         assertEquals(cloudformationTags, createCloudformationTags());
     }
 
@@ -28,6 +30,7 @@ public class UtilsTest extends TestBase {
         final Location location = Location.builder().build();
         final software.amazon.awssdk.services.networkmanager.model.Location networkManagerLocation =
                 Utils.transformLocation(location);
+
         assertEquals(networkManagerLocation, software.amazon.awssdk.services.networkmanager.model.Location.builder().build());
     }
 
@@ -35,8 +38,8 @@ public class UtilsTest extends TestBase {
     void testSdkToCfnLocationTransform() {
         final software.amazon.awssdk.services.networkmanager.model.Location location =
                 software.amazon.awssdk.services.networkmanager.model.Location.builder().build();
-        Location cloudformationLocation = Utils.transformLocation(location);
-        assertEquals(cloudformationLocation, Location.builder().build()
-        );
+        final Location cloudformationLocation = Utils.transformLocation(location);
+
+        assertEquals(cloudformationLocation, Location.builder().build());
     }
 }

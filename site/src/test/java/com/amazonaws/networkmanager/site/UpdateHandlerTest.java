@@ -77,7 +77,7 @@ public class UpdateHandlerTest extends TestBase {
 
         final ProgressEvent<ResourceModel, CallbackContext> response
                 = handler.handleRequest(proxy, request, context, logger);
-        assertThat(response).isNotNull();
+
         assertThat(response.getStatus()).isEqualTo(OperationStatus.FAILED);
         assertThat(response.getErrorCode()).isEqualTo(HandlerErrorCode.NotFound);
         assertThat(response.getCallbackContext().isUpdateFailed()).isEqualTo(true);
@@ -93,7 +93,6 @@ public class UpdateHandlerTest extends TestBase {
                 .site(buildSite())
                 .build();
         final TagResourceResponse tagResourceResponse = TagResourceResponse.builder().build();
-
         final ListTagsForResourceResponse listTagsForResourceResponse = ListTagsForResourceResponse.builder().tagList(new ArrayList<>()).build();
         doReturn(updateSiteResponse)
                 .when(proxy)

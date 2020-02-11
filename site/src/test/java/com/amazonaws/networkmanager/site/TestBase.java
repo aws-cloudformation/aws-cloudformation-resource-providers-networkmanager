@@ -22,9 +22,7 @@ public class TestBase {
     protected final static String SITE_ARN = "arn:aws:networkmanager::039868373529:site/global-network-0da702142c70e2699/site-0d6e92168b1f83b83";
     protected final static String DESCRIPTION = "description";
     protected final static String TAG_KEY_1 = "testKey1";
-    protected final static String TAG_KEY_2 = "testKey2";
     protected final static String TAG_VALUE_1 = "testKey1";
-    protected final static String TAG_VALUE_2 = "testKey2";
 
     protected CallbackContext context;
 
@@ -53,14 +51,12 @@ public class TestBase {
                 .build();
     }
 
-
     protected ResourceModel buildSimpleResourceModel() {
         return ResourceModel.builder()
                 .siteId(SITE_ID)
                 .globalNetworkId(GLOBAL_NETWORK_ID)
                 .build();
     }
-
 
     protected Site buildSite() {
         return Site.builder()
@@ -80,10 +76,9 @@ public class TestBase {
                 .build();
     }
 
-
     protected List<com.amazonaws.networkmanager.site.Tag> createCloudformationTags() {
-        List<com.amazonaws.networkmanager.site.Tag> tags = new ArrayList<>();
-        com.amazonaws.networkmanager.site.Tag t1 = new com.amazonaws.networkmanager.site.Tag(TAG_KEY_1, TAG_VALUE_1);
+        final List<com.amazonaws.networkmanager.site.Tag> tags = new ArrayList<>();
+        final com.amazonaws.networkmanager.site.Tag t1 = new com.amazonaws.networkmanager.site.Tag(TAG_KEY_1, TAG_VALUE_1);
         tags.add(t1);
         return tags;
     }
@@ -94,13 +89,5 @@ public class TestBase {
         tags.add(t1);
         return tags;
     }
-    protected List<com.amazonaws.networkmanager.site.Tag> createCloudFormationTags() {
-        final List<com.amazonaws.networkmanager.site.Tag> tags = new ArrayList<>();
-        final com.amazonaws.networkmanager.site.Tag t1 = com.amazonaws.networkmanager.site.Tag.builder()
-                .key(TAG_KEY_1)
-                .value(TAG_VALUE_1)
-                .build();
-        tags.add(t1);
-        return tags;
-    }
+
 }
