@@ -1,0 +1,15 @@
+{
+    "typeName": "AWS::NetworkManager::TransitGatewayRegistration",
+    "language": "java",
+    "runtime": "java8",
+    "entrypoint": "com.amazonaws.networkmanager.transitgatewayregistration.HandlerWrapper::handleRequest",
+    "testEntrypoint": "com.amazonaws.networkmanager.transitgatewayregistration.HandlerWrapper::testEntrypoint",
+    "settings": {
+        "namespace": [
+            "com",
+            "amazonaws",
+            "networkmanager",
+            "transitgatewayregistration"
+        ]
+    }
+}
