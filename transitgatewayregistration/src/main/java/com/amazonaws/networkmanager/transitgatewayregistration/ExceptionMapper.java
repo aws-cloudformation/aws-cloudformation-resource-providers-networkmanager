@@ -8,6 +8,7 @@ import software.amazon.awssdk.services.networkmanager.model.ThrottlingException;
 import software.amazon.awssdk.services.networkmanager.model.ValidationException;
 import software.amazon.awssdk.services.networkmanager.model.InternalServerException;
 import software.amazon.awssdk.services.networkmanager.model.ResourceNotFoundException;
+import software.amazon.cloudformation.exceptions.CfnGeneralServiceException;
 import software.amazon.cloudformation.exceptions.CfnNotFoundException;
 import software.amazon.cloudformation.proxy.HandlerErrorCode;
 
@@ -33,6 +34,8 @@ public final class ExceptionMapper {
             return HandlerErrorCode.ServiceInternalError;
         } else if (exception instanceof ResourceNotFoundException || exception instanceof CfnNotFoundException) {
             return HandlerErrorCode.NotFound;
+        } else if (exception instanceof CfnGeneralServiceException) {
+            return HandlerErrorCode.GeneralServiceException;
         } else {
             return HandlerErrorCode.InternalFailure;
         }

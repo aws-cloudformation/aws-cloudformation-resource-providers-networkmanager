@@ -17,6 +17,7 @@ public class TestBase {
 
     protected final static String GLOBAL_NETWORK_ID = "global-network-0da702142c70e2699";
     protected final static String TRANSIT_GATEWAY_ARN = "arn:aws:ec2:us-east-1:039868373529:transit-gateway/tgw-0339565f8509c0b39";
+    protected final static String FAILED_MESSAGE = "TransitGateway arn is not valid";
 
     protected CallbackContext context;
 
@@ -40,11 +41,35 @@ public class TestBase {
                 .build();
     }
 
-    protected TransitGatewayRegistration buildTransitGatewayRegistration() {
+    protected TransitGatewayRegistration buildAvailableTransitGatewayRegistration() {
         return TransitGatewayRegistration.builder()
                 .globalNetworkId(GLOBAL_NETWORK_ID)
                 .transitGatewayArn(TRANSIT_GATEWAY_ARN)
-                .state(TransitGatewayRegistrationStateReason.builder().code(TransitGatewayRegistrationState.AVAILABLE.name()).build())
+                .state(TransitGatewayRegistrationStateReason.builder().code(TransitGatewayRegistrationState.AVAILABLE).build())
+                .build();
+    }
+
+    protected TransitGatewayRegistration buildFailedTransitGatewayRegistration() {
+        return TransitGatewayRegistration.builder()
+                .globalNetworkId(GLOBAL_NETWORK_ID)
+                .transitGatewayArn(TRANSIT_GATEWAY_ARN)
+                .state(TransitGatewayRegistrationStateReason.builder().code(TransitGatewayRegistrationState.FAILED).message(FAILED_MESSAGE).build())
+                .build();
+    }
+
+    protected TransitGatewayRegistration buildDeletingTransitGatewayRegistration() {
+        return TransitGatewayRegistration.builder()
+                .globalNetworkId(GLOBAL_NETWORK_ID)
+                .transitGatewayArn(TRANSIT_GATEWAY_ARN)
+                .state(TransitGatewayRegistrationStateReason.builder().code(TransitGatewayRegistrationState.DELETING).message(FAILED_MESSAGE).build())
+                .build();
+    }
+
+    protected TransitGatewayRegistration buildPendingTransitGatewayRegistration() {
+        return TransitGatewayRegistration.builder()
+                .globalNetworkId(GLOBAL_NETWORK_ID)
+                .transitGatewayArn(TRANSIT_GATEWAY_ARN)
+                .state(TransitGatewayRegistrationStateReason.builder().code(TransitGatewayRegistrationState.PENDING).message(FAILED_MESSAGE).build())
                 .build();
     }
 

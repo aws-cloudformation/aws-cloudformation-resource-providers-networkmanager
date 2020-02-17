@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 public class CallbackContext {
-    private boolean createStarted;
+    private boolean actionStarted;
+    private int remainingRetryCount;
 }

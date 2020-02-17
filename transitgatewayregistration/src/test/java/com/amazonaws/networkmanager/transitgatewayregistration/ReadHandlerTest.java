@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import software.amazon.awssdk.services.networkmanager.model.GetTransitGatewayRegistrationsRequest;
 import software.amazon.awssdk.services.networkmanager.model.GetTransitGatewayRegistrationsResponse;
-import software.amazon.awssdk.services.networkmanager.model.ResourceNotFoundException;
 import software.amazon.cloudformation.proxy.HandlerErrorCode;
 import software.amazon.cloudformation.proxy.OperationStatus;
 import software.amazon.cloudformation.proxy.ProgressEvent;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
 
 @ExtendWith(MockitoExtension.class)
 public class ReadHandlerTest extends TestBase {
@@ -33,7 +31,7 @@ public class ReadHandlerTest extends TestBase {
     @Test
     public void handleRequest_SimpleSuccess() {
         final GetTransitGatewayRegistrationsResponse getTransitGatewayRegistrationResponse = GetTransitGatewayRegistrationsResponse.builder()
-                .transitGatewayRegistrations(buildTransitGatewayRegistration())
+                .transitGatewayRegistrations(buildPendingTransitGatewayRegistration())
                 .build();
         doReturn(getTransitGatewayRegistrationResponse)
                 .when(proxy)

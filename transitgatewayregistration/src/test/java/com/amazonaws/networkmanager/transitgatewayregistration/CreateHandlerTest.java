@@ -4,25 +4,31 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import software.amazon.awssdk.services.networkmanager.model.GetTransitGatewayRegistrationsRequest;
 import software.amazon.awssdk.services.networkmanager.model.GetTransitGatewayRegistrationsResponse;
 import software.amazon.awssdk.services.networkmanager.model.RegisterTransitGatewayRequest;
 import software.amazon.awssdk.services.networkmanager.model.RegisterTransitGatewayResponse;
+import software.amazon.awssdk.services.networkmanager.model.GetTransitGatewayRegistrationsRequest;
+import software.amazon.awssdk.services.networkmanager.model.AccessDeniedException;
+import software.amazon.awssdk.services.networkmanager.model.ConflictException;
 import software.amazon.awssdk.services.networkmanager.model.ServiceQuotaExceededException;
 import software.amazon.awssdk.services.networkmanager.model.ThrottlingException;
-import software.amazon.awssdk.services.networkmanager.model.AccessDeniedException;
+import software.amazon.awssdk.services.networkmanager.model.ValidationException;
 import software.amazon.awssdk.services.networkmanager.model.InternalServerException;
-import software.amazon.awssdk.services.networkmanager.model.ConflictException;
-import software.amazon.awssdk.services.networkmanager.model.ValidationException;;
 import software.amazon.cloudformation.proxy.HandlerErrorCode;
 import software.amazon.cloudformation.proxy.OperationStatus;
 import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 
+import static com.amazonaws.networkmanager.transitgatewayregistration.Utils.TIMED_OUT_MESSAGE;
+import static com.amazonaws.networkmanager.transitgatewayregistration.Utils.MAX_CALLBACK_COUNT;
+import static com.amazonaws.networkmanager.transitgatewayregistration.Utils.FAILED_STATE_MESSAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static software.amazon.awssdk.services.networkmanager.model.TransitGatewayRegistrationState.FAILED;
+import static software.amazon.cloudformation.proxy.HandlerErrorCode.GeneralServiceException;
+import static software.amazon.cloudformation.proxy.HandlerErrorCode.InternalFailure;
 
 @ExtendWith(MockitoExtension.class)
 public class CreateHandlerTest extends TestBase {
@@ -39,7 +45,7 @@ public class CreateHandlerTest extends TestBase {
     @Test
     public void handleRequest_CreationInitiated() {
         final RegisterTransitGatewayResponse transitGatewayRegistrationResponse = RegisterTransitGatewayResponse.builder()
-                .transitGatewayRegistration(buildTransitGatewayRegistration())
+                .transitGatewayRegistration(buildPendingTransitGatewayRegistration()) // a Pending state should be returned for initiation
                 .build();
         doReturn(transitGatewayRegistrationResponse)
                 .when(proxy)
@@ -55,9 +61,9 @@ public class CreateHandlerTest extends TestBase {
     }
 
     @Test
-    public void handleRequest_CreationFinalSucceed() {
+    public void handleRequest_CreationInProgress() {
         final GetTransitGatewayRegistrationsResponse getTransitGatewayRegistrationsResponse = GetTransitGatewayRegistrationsResponse.builder()
-                .transitGatewayRegistrations(buildTransitGatewayRegistration())
+                .transitGatewayRegistrations(buildPendingTransitGatewayRegistration()) // a Pending state should be returned for creation still in progress
                 .build();
         doReturn(getTransitGatewayRegistrationsResponse)
                 .when(proxy)
@@ -67,9 +73,61 @@ public class CreateHandlerTest extends TestBase {
                 .build();
 
         final ProgressEvent<ResourceModel, CallbackContext> response
-                = handler.handleRequest(proxy, request, CallbackContext.builder().createStarted(true).build(), logger);
+                = handler.handleRequest(proxy, request, CallbackContext.builder().actionStarted(true).remainingRetryCount(MAX_CALLBACK_COUNT).build(), logger);
+
+        assertThat(response.getStatus()).isEqualTo(OperationStatus.IN_PROGRESS);
+    }
+
+    @Test
+    public void handleRequest_CreationFinalSucceed() {
+        final GetTransitGatewayRegistrationsResponse getTransitGatewayRegistrationsResponse = GetTransitGatewayRegistrationsResponse.builder()
+                .transitGatewayRegistrations(buildAvailableTransitGatewayRegistration()) // an Available state should be returned for the final success
+                .build();
+        doReturn(getTransitGatewayRegistrationsResponse)
+                .when(proxy)
+                .injectCredentialsAndInvokeV2(any(GetTransitGatewayRegistrationsRequest.class), any());
+        final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
+                .desiredResourceState(model)
+                .build();
+
+        final ProgressEvent<ResourceModel, CallbackContext> response
+                = handler.handleRequest(proxy, request, CallbackContext.builder().actionStarted(true).remainingRetryCount(MAX_CALLBACK_COUNT).build(), logger);
 
         assertThat(response.getStatus()).isEqualTo(OperationStatus.SUCCESS);
+    }
+
+    @Test
+    public void handleRequest_CreationCallBackFailed() {
+        final GetTransitGatewayRegistrationsResponse getTransitGatewayRegistrationsResponse = GetTransitGatewayRegistrationsResponse.builder()
+                .transitGatewayRegistrations(buildFailedTransitGatewayRegistration()) // a Failed state should be returned during failed TGW registration process
+                .build();
+        doReturn(getTransitGatewayRegistrationsResponse)
+                .when(proxy)
+                .injectCredentialsAndInvokeV2(any(GetTransitGatewayRegistrationsRequest.class), any());
+        final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
+                .desiredResourceState(model)
+                .build();
+
+        final ProgressEvent<ResourceModel, CallbackContext> response
+                = handler.handleRequest(proxy, request, CallbackContext.builder().actionStarted(true).remainingRetryCount(MAX_CALLBACK_COUNT).build(), logger);
+
+        assertThat(response.getStatus()).isEqualTo(OperationStatus.FAILED);
+        assertThat(response.getMessage()).isEqualTo(String.format(GeneralServiceException.getMessage(), String.format(FAILED_STATE_MESSAGE, FAILED, FAILED_MESSAGE)));
+        assertThat(response.getErrorCode()).isEqualTo(GeneralServiceException);
+    }
+
+    @Test
+    public void handleRequest_CreationCallBackExceededMaximumCount() {
+        final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
+                .desiredResourceState(model)
+                .build();
+        // 0 remaining retry count should cause a time out internal failure
+        final ProgressEvent<ResourceModel, CallbackContext> response
+                = handler.handleRequest(proxy, request, CallbackContext.builder().actionStarted(true).remainingRetryCount(0).build(), logger);
+
+        assertThat(response.getStatus()).isEqualTo(OperationStatus.FAILED);
+        assertThat(response.getMessage()).isEqualTo(TIMED_OUT_MESSAGE);
+        assertThat(response.getErrorCode()).isEqualTo(InternalFailure);
     }
 
     @Test
@@ -173,6 +231,25 @@ public class CreateHandlerTest extends TestBase {
 
         assertThat(response.getStatus()).isEqualTo(OperationStatus.FAILED);
         assertThat(response.getErrorCode()).isEqualTo(HandlerErrorCode.ServiceInternalError);
+    }
+
+    @Test
+    public void handleRequest_ResourceNotFoundException() {
+        final GetTransitGatewayRegistrationsResponse getTransitGatewayRegistrationsResponse = GetTransitGatewayRegistrationsResponse.builder()
+                // empty registration returned
+                .build();
+        doReturn(getTransitGatewayRegistrationsResponse)
+                .when(proxy)
+                .injectCredentialsAndInvokeV2(any(GetTransitGatewayRegistrationsRequest.class), any());
+        final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
+                .desiredResourceState(model)
+                .build();
+
+        final ProgressEvent<ResourceModel, CallbackContext> response
+                = handler.handleRequest(proxy, request, CallbackContext.builder().actionStarted(true).remainingRetryCount(MAX_CALLBACK_COUNT).build(), logger);
+
+        assertThat(response.getStatus()).isEqualTo(OperationStatus.FAILED);
+        assertThat(response.getErrorCode()).isEqualTo(HandlerErrorCode.NotFound);
     }
 
 }
