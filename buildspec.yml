@@ -19,5 +19,15 @@ phases:
       - mvn clean verify --no-transfer-progress
       - cd "$CODEBUILD_SRC_DIR/transitgatewayregistration"
       - mvn clean verify --no-transfer-progress
+      - cd "$CODEBUILD_SRC_DIR/linkassociation"
+      - mvn clean verify --no-transfer-progress
+      - cd "$CODEBUILD_SRC_DIR/customergatewayassociation"
+      - mvn clean verify --no-transfer-progress
     finally:
       - cat "$CODEBUILD_SRC_DIR/globalnetwork/rpdk.log"
+      - cat "$CODEBUILD_SRC_DIR/device/rpdk.log"
+      - cat "$CODEBUILD_SRC_DIR/site/rpdk.log"
+      - cat "$CODEBUILD_SRC_DIR/link/rpdk.log"
+      - cat "$CODEBUILD_SRC_DIR/transitgatewayregistration/rpdk.log"
+      - cat "$CODEBUILD_SRC_DIR/linkassociation/rpdk.log"
+      - cat "$CODEBUILD_SRC_DIR/customergatewayassociation/rpdk.log"
