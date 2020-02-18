@@ -1,0 +1,15 @@
+{
+    "typeName": "AWS::NetworkManager::LinkAssociation",
+    "language": "java",
+    "runtime": "java8",
+    "entrypoint": "com.amazonaws.networkmanager.linkassociation.HandlerWrapper::handleRequest",
+    "testEntrypoint": "com.amazonaws.networkmanager.linkassociation.HandlerWrapper::testEntrypoint",
+    "settings": {
+        "namespace": [
+            "com",
+            "amazonaws",
+            "networkmanager",
+            "linkassociation"
+        ]
+    }
+}
