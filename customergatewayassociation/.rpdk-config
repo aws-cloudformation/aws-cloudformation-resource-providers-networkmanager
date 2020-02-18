@@ -1,0 +1,15 @@
+{
+    "typeName": "AWS::NetworkManager::CustomerGatewayAssociation",
+    "language": "java",
+    "runtime": "java8",
+    "entrypoint": "com.amazonaws.networkmanager.customergatewayassociation.HandlerWrapper::handleRequest",
+    "testEntrypoint": "com.amazonaws.networkmanager.customergatewayassociation.HandlerWrapper::testEntrypoint",
+    "settings": {
+        "namespace": [
+            "com",
+            "amazonaws",
+            "networkmanager",
+            "customergatewayassociation"
+        ]
+    }
+}
