@@ -86,7 +86,6 @@
     "/properties/SiteId"
   ],
   "primaryIdentifier": [
-    "/properties/GlobalNetworkId",
     "/properties/LinkId"
   ],
   "additionalIdentifiers": [
