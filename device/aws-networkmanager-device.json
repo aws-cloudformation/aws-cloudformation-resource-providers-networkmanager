@@ -95,7 +95,6 @@
     "/properties/GlobalNetworkId"
   ],
   "primaryIdentifier": [
-    "/properties/GlobalNetworkId",
     "/properties/DeviceId"
   ],
   "additionalIdentifiers": [
