@@ -75,6 +75,7 @@
     "/properties/GlobalNetworkId"
   ],
   "primaryIdentifier": [
+    "/properties/GlobalNetworkId",
     "/properties/SiteId"
   ],
   "additionalIdentifiers": [
