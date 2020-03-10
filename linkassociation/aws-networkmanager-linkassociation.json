@@ -22,11 +22,6 @@
     "DeviceId",
     "LinkId"
   ],
-  "readOnlyProperties": [
-    "/properties/GlobalNetworkId",
-    "/properties/DeviceId",
-    "/properties/LinkId"
-  ],
   "primaryIdentifier": [
     "/properties/GlobalNetworkId",
     "/properties/DeviceId",
