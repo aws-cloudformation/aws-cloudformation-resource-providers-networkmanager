@@ -1,4 +1,5 @@
 {
+    "artifact_type": "RESOURCE",
     "typeName": "AWS::NetworkManager::Device",
     "language": "java",
     "runtime": "java8",
@@ -10,6 +11,8 @@
             "amazonaws",
             "networkmanager",
             "device"
-        ]
-    }
+        ],
+        "protocolVersion": "2.0.0"
+    },
+    "executableEntrypoint": "com.amazonaws.networkmanager.device.HandlerWrapperExecutable"
 }

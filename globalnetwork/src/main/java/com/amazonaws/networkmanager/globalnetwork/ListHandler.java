@@ -49,7 +49,6 @@ public class ListHandler extends BaseHandler<CallbackContext> {
     private DescribeGlobalNetworksResponse describeGlobalNetworks(final NetworkManagerClient client,
                                                                   final String nextToken,
                                                                   final AmazonWebServicesClientProxy proxy) {
-        final List<ResourceModel> readResult = new ArrayList<>();
         final DescribeGlobalNetworksRequest describeGlobalNetworksRequest = DescribeGlobalNetworksRequest.builder()
                 .nextToken(nextToken)
                 .build();

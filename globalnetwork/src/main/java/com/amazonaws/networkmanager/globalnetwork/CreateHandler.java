@@ -10,6 +10,8 @@ import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 import software.amazon.cloudformation.proxy.OperationStatus;
 
+import java.util.Map;
+
 
 public class CreateHandler extends BaseHandler<CallbackContext> {
     @Override
@@ -22,10 +24,11 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         final ResourceModel model = request.getDesiredResourceState();
         final NetworkManagerClient client = ClientBuilder.getClient();
         final CreateGlobalNetworkResponse createGlobalNetworkResponse;
+        final Map<String, String> desiredResourceTags = request.getDesiredResourceTags();
 
         // Create global network
         try {
-            createGlobalNetworkResponse = createGlobalNetwork(client, model, proxy);
+            createGlobalNetworkResponse = createGlobalNetwork(client, model, desiredResourceTags, proxy);
         } catch (final Exception e) {
             return ProgressEvent.defaultFailureHandler(e, ExceptionMapper.mapToHandlerErrorCode(e));
         }
@@ -43,11 +46,12 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
 
     private CreateGlobalNetworkResponse createGlobalNetwork(final NetworkManagerClient client,
                                                             final ResourceModel model,
+                                                            final Map<String, String> desiredResourceTags,
                                                             final AmazonWebServicesClientProxy proxy) {
         final CreateGlobalNetworkRequest createGlobalNetworkRequest =
                 CreateGlobalNetworkRequest.builder()
                         .description(model.getDescription())
-                        .tags(Utils.cfnTagsToSdkTags(model.getTags()))
+                        .tags(Utils.cfnTagsToSdkTags(Utils.mergeTags(model.getTags(), desiredResourceTags)))
                         .build();
         return proxy.injectCredentialsAndInvokeV2(createGlobalNetworkRequest, client::createGlobalNetwork);
     }

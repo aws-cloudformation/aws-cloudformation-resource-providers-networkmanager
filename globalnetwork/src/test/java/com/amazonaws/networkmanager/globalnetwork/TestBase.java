@@ -7,9 +7,7 @@ import software.amazon.awssdk.services.networkmanager.model.Tag;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.Mockito.mock;
 
@@ -90,6 +88,21 @@ public class TestBase {
         final Tag t1 = software.amazon.awssdk.services.networkmanager.model.Tag.builder().key(TAG_KEY_1).value(TAG_VALUE_1).build();
         final Tag t2 = software.amazon.awssdk.services.networkmanager.model.Tag.builder().key(TAG_KEY_2).value(TAG_VALUE_2).build();
         tags.add(t1);
+        tags.add(t2);
+        return tags;
+    }
+
+    protected Map<String, String> createDesiredResourceTags() {
+        final Map<String, String> tags = new HashMap<>();
+        tags.put(TAG_KEY_2, TAG_VALUE_2);
+        return tags;
+    }
+
+    protected List<com.amazonaws.networkmanager.globalnetwork.Tag> createMergedTags() {
+        final List<com.amazonaws.networkmanager.globalnetwork.Tag> tags = new ArrayList<>();
+        final com.amazonaws.networkmanager.globalnetwork.Tag t1 = new com.amazonaws.networkmanager.globalnetwork.Tag(TAG_KEY_1, TAG_VALUE_1);
+        tags.add(t1);
+        final com.amazonaws.networkmanager.globalnetwork.Tag t2 = new com.amazonaws.networkmanager.globalnetwork.Tag(TAG_KEY_2, TAG_VALUE_2);
         tags.add(t2);
         return tags;
     }

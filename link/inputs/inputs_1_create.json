@@ -1,0 +1,9 @@
+{
+  "GlobalNetworkId": "global-network-07b4c0b28a3d5f253",
+  "SiteId": "site-088844786d385fa96",
+  "Bandwidth": {
+    "DownloadSpeed": 100,
+    "UploadSpeed": 100
+  },
+  "Description": "TestGlobalNetwork Description"
+}

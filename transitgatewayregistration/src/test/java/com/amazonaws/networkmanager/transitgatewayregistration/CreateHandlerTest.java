@@ -213,7 +213,7 @@ public class CreateHandlerTest extends TestBase {
                 = handler.handleRequest(proxy, request, context, logger);
 
         assertThat(response.getStatus()).isEqualTo(OperationStatus.FAILED);
-        assertThat(response.getErrorCode()).isEqualTo(HandlerErrorCode.InvalidRequest);
+        assertThat(response.getErrorCode()).isEqualTo(HandlerErrorCode.AlreadyExists);
     }
 
     @Test

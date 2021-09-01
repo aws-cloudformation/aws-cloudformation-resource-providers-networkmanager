@@ -7,13 +7,14 @@
       "description": "A key-value pair to associate with a global network resource.",
       "type": "object",
       "properties": {
-        "key": {
+        "Key": {
           "type": "string"
         },
-        "value": {
+        "Value": {
           "type": "string"
         }
-      }
+      },
+      "additionalProperties": false
     }
   },
   "properties": {

@@ -6,7 +6,9 @@ import software.amazon.cloudformation.exceptions.CfnInvalidRequestException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 final class Utils {
     /**
@@ -31,6 +33,36 @@ final class Utils {
                         .value(e.getValue())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Merge Tags from CloudFormation stack
+     * @param modelTags
+     * @param desiredResourceTags
+     * @return mergedTags
+     */
+
+    static List<com.amazonaws.networkmanager.link.Tag> mergeTags(
+            List<com.amazonaws.networkmanager.link.Tag> modelTags,
+            final Map<String, String> desiredResourceTags) {
+        if(modelTags == null) {
+            modelTags = new ArrayList<com.amazonaws.networkmanager.link.Tag>();
+        }
+        final List<com.amazonaws.networkmanager.link.Tag> tags = new ArrayList<com.amazonaws.networkmanager.link.Tag>();
+        if(desiredResourceTags != null){
+            for (Map.Entry<String, String> entry : desiredResourceTags.entrySet()) {
+                com.amazonaws.networkmanager.link.Tag tag = com.amazonaws.networkmanager.link.Tag.builder().key(entry.getKey()).value(entry.getValue()).build();
+                tags.add(tag);
+            }
+        }
+        if(tags.isEmpty()) {
+            return modelTags;
+        } else if(modelTags == null || modelTags.isEmpty()) {
+            return tags;
+        } else {
+            return Stream.concat(modelTags.stream(), tags.stream())
+                    .collect(Collectors.toList());
+        }
     }
 
     /**

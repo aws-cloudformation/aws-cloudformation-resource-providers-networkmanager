@@ -9,6 +9,7 @@ import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.OperationStatus;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
+import software.amazon.cloudformation.proxy.HandlerErrorCode;
 
 public class ReadHandler extends BaseHandler<CallbackContext> {
 
@@ -28,6 +29,8 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
             final DescribeGlobalNetworksResponse describeGlobalNetworksResponse = describeGlobalNetwork(client, model, proxy);
             final GlobalNetwork globalNetwork = describeGlobalNetworksResponse.globalNetworks().get(0);
             readResult = Utils.transformGlobalNetwork(globalNetwork);
+        } catch (final IndexOutOfBoundsException e) {
+            return ProgressEvent.failed(null, null, HandlerErrorCode.NotFound, null);
         } catch (final Exception e) {
             return ProgressEvent.defaultFailureHandler(e, ExceptionMapper.mapToHandlerErrorCode(e));
         }

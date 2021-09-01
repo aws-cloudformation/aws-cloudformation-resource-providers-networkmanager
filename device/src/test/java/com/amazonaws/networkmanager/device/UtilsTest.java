@@ -18,6 +18,13 @@ public class UtilsTest extends TestBase {
     }
 
     @Test
+    void testMergeTags() {
+        final List<com.amazonaws.networkmanager.device.Tag> tags = createCloudformationTags();
+        final List<com.amazonaws.networkmanager.device.Tag> mergedTags = Utils.mergeTags(createCloudformationTags(), createDesiredResourceTags());
+        assertEquals(mergedTags, createMergedTags());
+    }
+
+    @Test
     void testSdkToCfnTagTransform() {
         final List<Tag> tags = createNetworkManagerTags();
         final List<com.amazonaws.networkmanager.device.Tag> cloudformationTags = Utils.sdkTagsToCfnTags(tags);

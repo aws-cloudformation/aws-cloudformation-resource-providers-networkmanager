@@ -8,6 +8,7 @@ import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
+import software.amazon.cloudformation.proxy.HandlerErrorCode;
 
 import static software.amazon.cloudformation.proxy.OperationStatus.SUCCESS;
 
@@ -31,6 +32,8 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
 
             // Convert NetworkManager Link to Cloudformation resource model
             readResult = Utils.transformLink(link);
+        } catch (final IndexOutOfBoundsException e) {
+            return ProgressEvent.failed(null, null, HandlerErrorCode.NotFound, null);
         } catch (final Exception e) {
             return ProgressEvent.defaultFailureHandler(e, ExceptionMapper.mapToHandlerErrorCode(e));
         }

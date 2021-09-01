@@ -1,14 +1,13 @@
 package com.amazonaws.networkmanager.customergatewayassociation;
 
 import software.amazon.awssdk.services.networkmanager.NetworkManagerClient;
-import software.amazon.awssdk.services.networkmanager.model.GetCustomerGatewayAssociationsRequest;
 import software.amazon.awssdk.services.networkmanager.model.GetCustomerGatewayAssociationsResponse;
 import software.amazon.awssdk.services.networkmanager.model.CustomerGatewayAssociation;
-import software.amazon.cloudformation.exceptions.CfnNotFoundException;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
+import software.amazon.cloudformation.proxy.HandlerErrorCode;
 
 import static software.amazon.cloudformation.proxy.OperationStatus.SUCCESS;
 
@@ -26,16 +25,14 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
 
         try {
             // Call NetworkManager API getCustomerGatewayAssociations
-            final GetCustomerGatewayAssociationsResponse getCustomerGatewayAssociationsResponse = getCustomerGatewayAssociations(client, model, proxy);
+            final GetCustomerGatewayAssociationsResponse getCustomerGatewayAssociationsResponse = Utils.getCustomerGatewayAssociations(client, model, proxy);
 
-            // Cloudformation requires a NotFound error code if the resource never existed or was deleted
-            if (Boolean.FALSE == getCustomerGatewayAssociationsResponse.hasCustomerGatewayAssociations()) {
-                throw new CfnNotFoundException(ResourceModel.TYPE_NAME, model.getPrimaryIdentifier().toString());
-            }
             final CustomerGatewayAssociation customerGatewayAssociation = getCustomerGatewayAssociationsResponse.customerGatewayAssociations().get(0);
 
             // Convert NetworkManager CustomerGatewayAssociation to Cloudformation resource model
             readResult = Utils.transformCustomerGatewayAssociation(customerGatewayAssociation);
+        } catch (IndexOutOfBoundsException e) {
+            return ProgressEvent.failed(null, null, HandlerErrorCode.NotFound, null);
         } catch (final Exception e) {
             return ProgressEvent.defaultFailureHandler(e, ExceptionMapper.mapToHandlerErrorCode(e));
         }
@@ -45,15 +42,5 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
                 .resourceModel(readResult)
                 .status(SUCCESS)
                 .build();
-    }
-
-    private GetCustomerGatewayAssociationsResponse getCustomerGatewayAssociations(final NetworkManagerClient client,
-                                                            final ResourceModel model,
-                                                            final AmazonWebServicesClientProxy proxy) {
-        final GetCustomerGatewayAssociationsRequest getCustomerGatewayAssociationsRequest = GetCustomerGatewayAssociationsRequest.builder()
-                .globalNetworkId(model.getGlobalNetworkId())
-                .customerGatewayArns(model.getCustomerGatewayArn())
-                .build();
-        return proxy.injectCredentialsAndInvokeV2(getCustomerGatewayAssociationsRequest, client::getCustomerGatewayAssociations);
     }
 }
