@@ -8,6 +8,8 @@ import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 
+import java.util.Map;
+
 import static software.amazon.cloudformation.proxy.OperationStatus.SUCCESS;
 
 
@@ -22,10 +24,11 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         final ResourceModel model = request.getDesiredResourceState();
         final NetworkManagerClient client = ClientBuilder.getClient();
         final CreateSiteResponse createSiteResponse;
+        final Map<String, String> desiredResourceTags = request.getDesiredResourceTags();
 
         // Call network manager api to create site
         try {
-            createSiteResponse = createSite(client, model, proxy);
+            createSiteResponse = createSite(client, model, desiredResourceTags, proxy);
         } catch (final Exception e) {
             return ProgressEvent.defaultFailureHandler(e, ExceptionMapper.mapToHandlerErrorCode(e));
         }
@@ -43,12 +46,13 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
 
     private CreateSiteResponse createSite(final NetworkManagerClient client,
                                               final ResourceModel model,
+                                              final Map<String, String> desiredResourceTags,
                                               final AmazonWebServicesClientProxy proxy) {
         final CreateSiteRequest createSiteRequest =
                 CreateSiteRequest.builder()
                         .globalNetworkId(model.getGlobalNetworkId())
                         .description(model.getDescription())
-                        .tags(Utils.cfnTagsToSdkTags(model.getTags()))
+                        .tags(Utils.cfnTagsToSdkTags(Utils.mergeTags(model.getTags(), desiredResourceTags)))
                         .location(Utils.transformLocation(model.getLocation()))
                         .build();
         return proxy.injectCredentialsAndInvokeV2(createSiteRequest, client::createSite);

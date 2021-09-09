@@ -2,12 +2,11 @@ package com.amazonaws.networkmanager.transitgatewayregistration;
 
 import software.amazon.awssdk.services.networkmanager.NetworkManagerClient;
 import software.amazon.awssdk.services.networkmanager.model.GetTransitGatewayRegistrationsResponse;
-import software.amazon.cloudformation.exceptions.CfnNotFoundException;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
-
+import software.amazon.cloudformation.proxy.HandlerErrorCode;
 import static software.amazon.cloudformation.proxy.OperationStatus.SUCCESS;
 
 public class ReadHandler extends BaseHandler<CallbackContext> {
@@ -25,7 +24,7 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
             final GetTransitGatewayRegistrationsResponse getTransitGatewayRegistrationsResponse = Utils.getTransitGatewayRegistrations(client, model, proxy);
             if(getTransitGatewayRegistrationsResponse.transitGatewayRegistrations().isEmpty()) {
                 // Cloudformation requires a NotFound error code if the resource never existed or was deleted
-                throw new CfnNotFoundException(ResourceModel.TYPE_NAME, model.getPrimaryIdentifier().toString());
+                return ProgressEvent.failed(null, null, HandlerErrorCode.NotFound, null);
             }
             readResult = Utils.transformTransitGatewayRegistration(getTransitGatewayRegistrationsResponse.transitGatewayRegistrations().get(0));
             return ProgressEvent.<ResourceModel, CallbackContext>builder()

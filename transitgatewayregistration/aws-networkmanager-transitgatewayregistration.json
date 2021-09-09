@@ -12,6 +12,7 @@
       "type": "string"
     }
   },
+  "taggable": false,
   "additionalProperties": false,
   "required": [
     "GlobalNetworkId",
@@ -32,6 +33,11 @@
       ]
     },
     "read": {
+      "permissions": [
+        "networkmanager:GetTransitGatewayRegistrations"
+      ]
+    },
+    "list": {
       "permissions": [
         "networkmanager:GetTransitGatewayRegistrations"
       ]

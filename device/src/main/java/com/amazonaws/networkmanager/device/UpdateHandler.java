@@ -19,6 +19,7 @@ import static software.amazon.cloudformation.proxy.OperationStatus.SUCCESS;
 import static software.amazon.cloudformation.proxy.OperationStatus.FAILED;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,12 +42,13 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
         }
         final NetworkManagerClient client = ClientBuilder.getClient();
         final UpdateDeviceResponse updateDeviceResponse;
+        final Map<String, String> desiredResourceTags = request.getDesiredResourceTags();
 
         try {
             // Update device
             updateDeviceResponse = updateDevice(client, model, proxy);
             // Update Tags
-            updateTags(client, updateDeviceResponse.device().deviceArn(), proxy, model);
+            updateTags(client, updateDeviceResponse.device().deviceArn(), proxy, model, desiredResourceTags);
 
         } catch (final Exception e) {
             return ProgressEvent.<ResourceModel, CallbackContext>builder()
@@ -87,13 +89,14 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
     private void updateTags(final NetworkManagerClient client,
                             final String arn,
                             final AmazonWebServicesClientProxy proxy,
-                            final ResourceModel model) {
+                            final ResourceModel model,
+                            final Map<String, String> desiredResourceTags) {
         // Add tag
         if (model.getTags() != null && !model.getTags().isEmpty()) {
             final TagResourceRequest tagResourceRequest =
                     TagResourceRequest.builder()
                             .resourceArn(arn)
-                            .tags(Utils.cfnTagsToSdkTags(model.getTags()))
+                            .tags(Utils.cfnTagsToSdkTags(Utils.mergeTags(model.getTags(), desiredResourceTags)))
                             .build();
             proxy.injectCredentialsAndInvokeV2(tagResourceRequest, client::tagResource);
         }
@@ -105,7 +108,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
                         .build();
         final ListTagsForResourceResponse listTagsForResourceResponse = proxy.injectCredentialsAndInvokeV2(listTagsForResource, client::listTagsForResource);
         final Set<software.amazon.awssdk.services.networkmanager.model.Tag> currentTags = new HashSet<>(listTagsForResourceResponse.tagList());
-        final Set<software.amazon.awssdk.services.networkmanager.model.Tag> desiredTags = new HashSet<>(Utils.cfnTagsToSdkTags(model.getTags()));
+        final Set<software.amazon.awssdk.services.networkmanager.model.Tag> desiredTags = new HashSet<>(Utils.cfnTagsToSdkTags(Utils.mergeTags(model.getTags(), desiredResourceTags)));
 
         // Remove tag
         final Set<software.amazon.awssdk.services.networkmanager.model.Tag> tagsToRemove = Sets.difference(currentTags, desiredTags);

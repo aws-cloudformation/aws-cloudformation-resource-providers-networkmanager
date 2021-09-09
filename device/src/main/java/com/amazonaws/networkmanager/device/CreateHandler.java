@@ -10,6 +10,8 @@ import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 
 import static software.amazon.cloudformation.proxy.OperationStatus.SUCCESS;
 
+import java.util.Map;
+
 
 public class CreateHandler extends BaseHandler<CallbackContext> {
     @Override
@@ -21,11 +23,12 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         // Initiate the request
         final ResourceModel model = request.getDesiredResourceState();
         final NetworkManagerClient client = ClientBuilder.getClient();
+        final Map<String, String> desiredResourceTags = request.getDesiredResourceTags();
         final CreateDeviceResponse createDeviceResponse;
 
         // Call network manager api to create device
         try {
-            createDeviceResponse = createDevice(client, model, proxy);
+            createDeviceResponse = createDevice(client, model, desiredResourceTags, proxy);
         } catch (final Exception e) {
             return ProgressEvent.defaultFailureHandler(e, ExceptionMapper.mapToHandlerErrorCode(e));
         }
@@ -43,12 +46,13 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
 
     private CreateDeviceResponse createDevice(final NetworkManagerClient client,
                                               final ResourceModel model,
+                                              final Map<String, String> desiredResourceTags,
                                               final AmazonWebServicesClientProxy proxy) {
         final CreateDeviceRequest createDeviceRequest =
                 CreateDeviceRequest.builder()
                         .globalNetworkId(model.getGlobalNetworkId())
                         .description(model.getDescription())
-                        .tags(Utils.cfnTagsToSdkTags(model.getTags()))
+                        .tags(Utils.cfnTagsToSdkTags(Utils.mergeTags(model.getTags(), desiredResourceTags)))
                         .location(Utils.transformLocation(model.getLocation()))
                         .model(model.getModel())
                         .serialNumber(model.getSerialNumber())

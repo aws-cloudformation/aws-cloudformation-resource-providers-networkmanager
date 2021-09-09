@@ -1,5 +1,6 @@
 package com.amazonaws.networkmanager.link;
 
+import com.amazonaws.networkmanager.link.Utils;
 import software.amazon.awssdk.services.networkmanager.NetworkManagerClient;
 import software.amazon.awssdk.services.networkmanager.model.CreateLinkRequest;
 import software.amazon.awssdk.services.networkmanager.model.CreateLinkResponse;
@@ -7,6 +8,8 @@ import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
+
+import java.util.Map;
 
 import static software.amazon.cloudformation.proxy.OperationStatus.SUCCESS;
 
@@ -22,10 +25,11 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         final ResourceModel model = request.getDesiredResourceState();
         final NetworkManagerClient client = ClientBuilder.getClient();
         final CreateLinkResponse createLinkResponse;
+        final Map<String, String> desiredResourceTags = request.getDesiredResourceTags();
 
         // Call NetworkManager api to create link
         try {
-            createLinkResponse = createLink(client, model, proxy);
+            createLinkResponse = createLink(client, model, desiredResourceTags, proxy);
         } catch (final Exception e) {
             return ProgressEvent.defaultFailureHandler(e, ExceptionMapper.mapToHandlerErrorCode(e));
         }
@@ -43,13 +47,14 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
 
     private CreateLinkResponse createLink(final NetworkManagerClient client,
                                           final ResourceModel model,
+                                          final Map<String, String> desiredResourceTags,
                                           final AmazonWebServicesClientProxy proxy) {
         final CreateLinkRequest createLinkRequest =
                 CreateLinkRequest.builder()
                         .globalNetworkId(model.getGlobalNetworkId())
                         .siteId(model.getSiteId())
                         .description(model.getDescription())
-                        .tags(Utils.cfnTagsToSdkTags(model.getTags()))
+                        .tags(Utils.cfnTagsToSdkTags(Utils.mergeTags(model.getTags(), desiredResourceTags)))
                         .bandwidth(Utils.transformBandwidth(model.getBandwidth()))
                         .type(model.getType())
                         .provider(model.getProvider())
