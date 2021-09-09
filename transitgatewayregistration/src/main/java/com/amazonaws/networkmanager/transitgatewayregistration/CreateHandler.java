@@ -1,6 +1,7 @@
 package com.amazonaws.networkmanager.transitgatewayregistration;
 
 import software.amazon.awssdk.services.networkmanager.NetworkManagerClient;
+import software.amazon.awssdk.services.networkmanager.model.ValidationException;
 import software.amazon.awssdk.services.networkmanager.model.GetTransitGatewayRegistrationsResponse;
 import software.amazon.awssdk.services.networkmanager.model.RegisterTransitGatewayRequest;
 import software.amazon.awssdk.services.networkmanager.model.TransitGatewayRegistrationState;
@@ -11,6 +12,7 @@ import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
+import software.amazon.cloudformation.proxy.HandlerErrorCode;
 
 import static com.amazonaws.networkmanager.transitgatewayregistration.Utils.UNRECOGNIZED_STATE_MESSAGE;
 import static com.amazonaws.networkmanager.transitgatewayregistration.Utils.TIMED_OUT_MESSAGE;
@@ -87,6 +89,8 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
                     throw new RuntimeException(String.format(UNRECOGNIZED_STATE_MESSAGE, stateCode, stateReason.message()));
             }
 
+        } catch (final ValidationException e){
+            return ProgressEvent.failed(null, null, HandlerErrorCode.AlreadyExists, e.getMessage());
         } catch (final Exception e) {
             return ProgressEvent.defaultFailureHandler(e, ExceptionMapper.mapToHandlerErrorCode(e));
         }

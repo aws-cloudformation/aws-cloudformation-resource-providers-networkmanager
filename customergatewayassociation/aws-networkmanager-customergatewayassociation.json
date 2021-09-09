@@ -20,6 +20,7 @@
       "type": "string"
     }
   },
+  "taggable": false,
   "additionalProperties": false,
   "required": [
     "GlobalNetworkId",
@@ -39,10 +40,16 @@
   "handlers": {
     "create": {
       "permissions": [
+        "networkmanager:GetCustomerGatewayAssociations",
         "networkmanager:AssociateCustomerGateway"
       ]
     },
     "read": {
+      "permissions": [
+        "networkmanager:GetCustomerGatewayAssociations"
+      ]
+    },
+    "list": {
       "permissions": [
         "networkmanager:GetCustomerGatewayAssociations"
       ]

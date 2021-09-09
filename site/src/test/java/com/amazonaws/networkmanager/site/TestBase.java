@@ -8,7 +8,9 @@ import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 
@@ -23,6 +25,8 @@ public class TestBase {
     protected final static String DESCRIPTION = "description";
     protected final static String TAG_KEY_1 = "testKey1";
     protected final static String TAG_VALUE_1 = "testKey1";
+    protected final static String TAG_KEY_2 = "testKey2";
+    protected final static String TAG_VALUE_2 = "testKey2";
 
     protected CallbackContext context;
 
@@ -87,6 +91,22 @@ public class TestBase {
         final List<Tag> tags = new ArrayList<>();
         final Tag t1 = Tag.builder().key(TAG_KEY_1).value(TAG_VALUE_1).build();
         tags.add(t1);
+        return tags;
+    }
+
+
+    protected Map<String, String> createDesiredResourceTags() {
+        final Map<String, String> tags = new HashMap<>();
+        tags.put(TAG_KEY_2, TAG_VALUE_2);
+        return tags;
+    }
+
+    protected List<com.amazonaws.networkmanager.site.Tag> createMergedTags() {
+        final List<com.amazonaws.networkmanager.site.Tag> tags = new ArrayList<>();
+        final com.amazonaws.networkmanager.site.Tag t1 = new com.amazonaws.networkmanager.site.Tag(TAG_KEY_1, TAG_VALUE_1);
+        tags.add(t1);
+        final com.amazonaws.networkmanager.site.Tag t2 = new com.amazonaws.networkmanager.site.Tag(TAG_KEY_2, TAG_VALUE_2);
+        tags.add(t2);
         return tags;
     }
 

@@ -7,13 +7,14 @@
       "description": "A key-value pair to associate with a device resource.",
       "type": "object",
       "properties": {
-        "key": {
+        "Key": {
           "type": "string"
         },
-        "value": {
+        "Value": {
           "type": "string"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "Location": {
       "description": "The site location.",
@@ -31,7 +32,8 @@
           "description": "The longitude.",
           "type": "string"
         }
-      }
+      },
+      "additionalProperties": false
     }
   },
   "properties": {

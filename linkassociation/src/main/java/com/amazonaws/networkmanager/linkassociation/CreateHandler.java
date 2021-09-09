@@ -2,10 +2,12 @@ package com.amazonaws.networkmanager.linkassociation;
 
 import software.amazon.awssdk.services.networkmanager.NetworkManagerClient;
 import software.amazon.awssdk.services.networkmanager.model.AssociateLinkRequest;
+import software.amazon.awssdk.services.networkmanager.model.GetLinkAssociationsResponse;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
+import software.amazon.cloudformation.proxy.HandlerErrorCode;
 
 import static software.amazon.cloudformation.proxy.OperationStatus.SUCCESS;
 
@@ -21,6 +23,17 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         final ResourceModel model = request.getDesiredResourceState();
         final NetworkManagerClient client = ClientBuilder.getClient();
 
+        // Check duplicate request
+        try {
+            final GetLinkAssociationsResponse getLinkAssociationsResponse = Utils.getLinkAssociations(client, model, proxy);
+
+            if (getLinkAssociationsResponse.linkAssociations().size() != 0) {
+                return ProgressEvent.failed(null, null, HandlerErrorCode.AlreadyExists, null);
+            }
+
+        } catch (Exception e) {
+            // no action
+        }
         // Call NetworkManager api to associate link
         try {
             associateLink(client, model, proxy);

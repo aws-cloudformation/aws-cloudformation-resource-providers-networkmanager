@@ -64,7 +64,6 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
                     // if this is a callback from a previous deletion request, return deletion success
                     logger.log(String.format("%s [%s] deletion succeeded", ResourceModel.TYPE_NAME, model.getPrimaryIdentifier()));
                     return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                            .resourceModel(request.getDesiredResourceState())
                             .status(SUCCESS)
                             .build();
                 }
@@ -84,7 +83,7 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
                 case PENDING:
                 case DELETING: // callback every 30s until the TGW is deregistered
                     return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                            .resourceModel(model)
+                            .resourceModel(request.getDesiredResourceState())
                             .status(IN_PROGRESS)
                             .callbackDelaySeconds(CALlBACK_PERIOD_30_SECONDS)
                             .callbackContext(CallbackContext.builder().actionStarted(true).remainingRetryCount(remainingRetryCount).build())
@@ -93,7 +92,6 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
                 case DELETED: // return a deletion success because FAILED/DELETED is a terminated state
                     logger.log(String.format("%s [%s] deletion succeeded", ResourceModel.TYPE_NAME, model.getPrimaryIdentifier()));
                     return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                            .resourceModel(request.getDesiredResourceState())
                             .status(SUCCESS)
                             .build();
                 default:

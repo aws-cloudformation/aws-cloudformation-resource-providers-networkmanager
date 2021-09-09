@@ -31,14 +31,13 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
 
         logger.log(String.format("%s [%s] deletion succeeded", ResourceModel.TYPE_NAME, model.getPrimaryIdentifier()));
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                .resourceModel(model)
                 .status(SUCCESS)
                 .build();
     }
 
     private DisassociateCustomerGatewayResponse disassociateCustomerGateway(final NetworkManagerClient client,
-                                                      final ResourceModel model,
-                                                      final AmazonWebServicesClientProxy proxy) {
+                                                                            final ResourceModel model,
+                                                                            final AmazonWebServicesClientProxy proxy) {
         final DisassociateCustomerGatewayRequest disassociateCustomerGatewayRequest =
                 DisassociateCustomerGatewayRequest.builder()
                         .globalNetworkId(model.getGlobalNetworkId())
