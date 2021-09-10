@@ -36,8 +36,8 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
     }
 
     private DisassociateCustomerGatewayResponse disassociateCustomerGateway(final NetworkManagerClient client,
-                                                                            final ResourceModel model,
-                                                                            final AmazonWebServicesClientProxy proxy) {
+                                                      final ResourceModel model,
+                                                      final AmazonWebServicesClientProxy proxy) {
         final DisassociateCustomerGatewayRequest disassociateCustomerGatewayRequest =
                 DisassociateCustomerGatewayRequest.builder()
                         .globalNetworkId(model.getGlobalNetworkId())
