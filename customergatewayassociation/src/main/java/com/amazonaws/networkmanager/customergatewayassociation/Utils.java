@@ -21,8 +21,8 @@ final class Utils {
     }
 
     static GetCustomerGatewayAssociationsResponse getCustomerGatewayAssociations(final NetworkManagerClient client,
-                                                                                 final ResourceModel model,
-                                                                                 final AmazonWebServicesClientProxy proxy) {
+                                                                                  final ResourceModel model,
+                                                                                  final AmazonWebServicesClientProxy proxy) {
         final GetCustomerGatewayAssociationsRequest getCustomerGatewayAssociationsRequest = GetCustomerGatewayAssociationsRequest.builder()
                 .globalNetworkId(model.getGlobalNetworkId())
                 .customerGatewayArns(model.getCustomerGatewayArn())

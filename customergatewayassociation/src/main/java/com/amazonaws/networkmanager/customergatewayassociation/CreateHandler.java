@@ -49,8 +49,8 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
     }
 
     private void associateCustomerGateway(final NetworkManagerClient client,
-                                          final ResourceModel model,
-                                          final AmazonWebServicesClientProxy proxy) {
+                               final ResourceModel model,
+                               final AmazonWebServicesClientProxy proxy) {
         final AssociateCustomerGatewayRequest associateCustomerGatewayRequest =
                 AssociateCustomerGatewayRequest.builder()
                         .customerGatewayArn(model.getCustomerGatewayArn())
