@@ -1,0 +1,13 @@
+{
+  "CoreNetworkId": "{{CoreNetworkForContractTest}}",
+  "VpcArn": "{{VpcForContractTest}}",
+  "SubnetArns": [
+    "{{SubnetArnForContractTest1}}"
+  ],
+  "Tags": [
+    {
+      "Key": "key",
+      "Value": "value"
+    }
+  ]
+}

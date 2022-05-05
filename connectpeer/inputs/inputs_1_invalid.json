@@ -1,0 +1,7 @@
+{
+  "PeerAddress": "128.128.129.1",
+  "ConnectAttachmentId": "attachment-12331234",
+  "InsideCidrBlocks": [
+    "123.123.112.0/29"
+  ]
+}

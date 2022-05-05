@@ -1,0 +1,4 @@
+{
+  "CoreNetworkId": "core-network-1234",
+  "VpnConnectionArn": "arn:aws:ec2:region:123412341234:vpn-connection/vpn-1234"
+}

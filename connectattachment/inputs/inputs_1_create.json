@@ -1,0 +1,14 @@
+{
+  "CoreNetworkId": "{{CoreNetworkForContractTest}}",
+  "TransportAttachmentId": "{{TransportAttachmentForContractTest}}",
+  "EdgeLocation": "{{ContractTestRegion}}",
+  "Options": {
+    "Protocol": "GRE"
+  },
+  "Tags": [
+    {
+      "Key": "key",
+      "Value": "value"
+    }
+  ]
+}

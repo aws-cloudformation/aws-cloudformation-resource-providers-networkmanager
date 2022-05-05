@@ -1,0 +1,8 @@
+{
+  "CoreNetworkId": "core-network-123",
+  "TransportAttachmentId": "attachment-123",
+  "EdgeLocation": "region",
+  "Options": {
+    "Protocol": "GRE"
+  }
+}

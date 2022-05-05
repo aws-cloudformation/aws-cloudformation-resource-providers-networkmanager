@@ -1,0 +1,7 @@
+{
+  "CoreNetworkId": "core-network-123",
+  "VpcArn": "arn:aws:ec2:region:123412341234:vpc/vpc-1234",
+  "Subnets": [
+    "arn:aws:ec2:region:123412341234:subnet/subnet-1234"
+  ]
+}
