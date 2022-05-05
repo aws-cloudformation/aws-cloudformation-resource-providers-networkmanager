@@ -31,3 +31,8 @@ phases:
       - cat "$CODEBUILD_SRC_DIR/transitgatewayregistration/rpdk.log"
       - cat "$CODEBUILD_SRC_DIR/linkassociation/rpdk.log"
       - cat "$CODEBUILD_SRC_DIR/customergatewayassociation/rpdk.log"
+      - cat "$CODEBUILD_SRC_DIR/corenetwork/rpdk.log"
+      - cat "$CODEBUILD_SRC_DIR/connectattachment/rpdk.log"
+      - cat "$CODEBUILD_SRC_DIR/connectpeer/rpdk.log"
+      - cat "$CODEBUILD_SRC_DIR/sitetositevpnattachment/rpdk.log"
+      - cat "$CODEBUILD_SRC_DIR/vpcattachment/rpdk.log"

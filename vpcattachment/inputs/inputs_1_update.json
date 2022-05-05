@@ -1,0 +1,12 @@
+{
+  "SubnetArns": [
+    "{{SubnetArnForContractTest1}}",
+    "{{SubnetArnForContractTest2}}"
+  ],
+  "Tags": [
+    {
+      "Key": "newKey",
+      "Value": "newValue"
+    }
+  ]
+}

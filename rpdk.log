@@ -1,0 +1,72 @@
+[2022-01-10T19:17:58Z] DEBUG    - Logging set up successfully
+[2022-01-10T19:17:58Z] DEBUG    - Running test: Namespace(version=False, subparser_name='test', command=<function test at 0x11f02e4d0>, verbose=0, endpoint='http://127.0.0.1:3001', function_name='TypeFunction', region='us-east-1', role_arn=None, cloudformation_endpoint_url=None, enforce_timeout='30', log_group_name=None, log_role_arn=None, passed_to_pytest=[], docker_image=None)
+[2022-01-10T19:17:58Z] DEBUG    - Root directory: /Volumes/workplace/NM-CFN/src/AWSCloudFormationResourceProvidersNetworkManager
+[2022-01-10T19:17:58Z] DEBUG    - Loading project file '/Volumes/workplace/NM-CFN/src/AWSCloudFormationResourceProvidersNetworkManager/.rpdk-config'
+[2022-01-10T19:17:58Z] DEBUG    - Project file /Volumes/workplace/NM-CFN/src/AWSCloudFormationResourceProvidersNetworkManager/.rpdk-config not found. Have you run 'init' or in a wrong directory?
+Traceback (most recent call last):
+  File "/usr/local/Cellar/cloudformation-cli/0.2.22/libexec/lib/python3.10/site-packages/rpdk/core/project.py", line 442, in load
+    self.load_settings()
+  File "/usr/local/Cellar/cloudformation-cli/0.2.22/libexec/lib/python3.10/site-packages/rpdk/core/project.py", line 195, in load_settings
+    with self.settings_path.open("r", encoding="utf-8") as f:
+  File "/usr/local/Cellar/python@3.10/3.10.1/Frameworks/Python.framework/Versions/3.10/lib/python3.10/pathlib.py", line 1117, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/Volumes/workplace/NM-CFN/src/AWSCloudFormationResourceProvidersNetworkManager/.rpdk-config'
+[2022-01-10T19:17:58Z] DEBUG    - Caught exit recommendation
+Traceback (most recent call last):
+  File "/usr/local/Cellar/cloudformation-cli/0.2.22/libexec/lib/python3.10/site-packages/rpdk/core/project.py", line 442, in load
+    self.load_settings()
+  File "/usr/local/Cellar/cloudformation-cli/0.2.22/libexec/lib/python3.10/site-packages/rpdk/core/project.py", line 195, in load_settings
+    with self.settings_path.open("r", encoding="utf-8") as f:
+  File "/usr/local/Cellar/python@3.10/3.10.1/Frameworks/Python.framework/Versions/3.10/lib/python3.10/pathlib.py", line 1117, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/Volumes/workplace/NM-CFN/src/AWSCloudFormationResourceProvidersNetworkManager/.rpdk-config'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/Cellar/cloudformation-cli/0.2.22/libexec/lib/python3.10/site-packages/rpdk/core/cli.py", line 100, in main
+    args.command(args)
+  File "/usr/local/Cellar/cloudformation-cli/0.2.22/libexec/lib/python3.10/site-packages/rpdk/core/test.py", line 181, in test
+    project.load()
+  File "/usr/local/Cellar/cloudformation-cli/0.2.22/libexec/lib/python3.10/site-packages/rpdk/core/project.py", line 444, in load
+    self._raise_invalid_project(
+  File "/usr/local/Cellar/cloudformation-cli/0.2.22/libexec/lib/python3.10/site-packages/rpdk/core/project.py", line 190, in _raise_invalid_project
+    raise InvalidProjectError(msg) from e
+rpdk.core.exceptions.InvalidProjectError: Project file /Volumes/workplace/NM-CFN/src/AWSCloudFormationResourceProvidersNetworkManager/.rpdk-config not found. Have you run 'init' or in a wrong directory?
+[2022-01-10T19:17:58Z] CRITICAL - Project file /Volumes/workplace/NM-CFN/src/AWSCloudFormationResourceProvidersNetworkManager/.rpdk-config not found. Have you run 'init' or in a wrong directory?
+[2022-01-11T06:39:33Z] DEBUG    - Logging set up successfully
+[2022-01-11T06:39:33Z] DEBUG    - Running validate: Namespace(version=False, subparser_name='validate', command=<function validate at 0x11f04a9e0>, verbose=0)
+[2022-01-11T06:39:33Z] DEBUG    - Root directory: /Volumes/workplace/NM-CFN/src/AWSCloudFormationResourceProvidersNetworkManager
+[2022-01-11T06:39:33Z] DEBUG    - Loading project file '/Volumes/workplace/NM-CFN/src/AWSCloudFormationResourceProvidersNetworkManager/.rpdk-config'
+[2022-01-11T06:39:33Z] DEBUG    - Project file /Volumes/workplace/NM-CFN/src/AWSCloudFormationResourceProvidersNetworkManager/.rpdk-config not found. Have you run 'init' or in a wrong directory?
+Traceback (most recent call last):
+  File "/usr/local/Cellar/cloudformation-cli/0.2.22/libexec/lib/python3.10/site-packages/rpdk/core/project.py", line 442, in load
+    self.load_settings()
+  File "/usr/local/Cellar/cloudformation-cli/0.2.22/libexec/lib/python3.10/site-packages/rpdk/core/project.py", line 195, in load_settings
+    with self.settings_path.open("r", encoding="utf-8") as f:
+  File "/usr/local/Cellar/python@3.10/3.10.1/Frameworks/Python.framework/Versions/3.10/lib/python3.10/pathlib.py", line 1117, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/Volumes/workplace/NM-CFN/src/AWSCloudFormationResourceProvidersNetworkManager/.rpdk-config'
+[2022-01-11T06:39:33Z] DEBUG    - Caught exit recommendation
+Traceback (most recent call last):
+  File "/usr/local/Cellar/cloudformation-cli/0.2.22/libexec/lib/python3.10/site-packages/rpdk/core/project.py", line 442, in load
+    self.load_settings()
+  File "/usr/local/Cellar/cloudformation-cli/0.2.22/libexec/lib/python3.10/site-packages/rpdk/core/project.py", line 195, in load_settings
+    with self.settings_path.open("r", encoding="utf-8") as f:
+  File "/usr/local/Cellar/python@3.10/3.10.1/Frameworks/Python.framework/Versions/3.10/lib/python3.10/pathlib.py", line 1117, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/Volumes/workplace/NM-CFN/src/AWSCloudFormationResourceProvidersNetworkManager/.rpdk-config'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/Cellar/cloudformation-cli/0.2.22/libexec/lib/python3.10/site-packages/rpdk/core/cli.py", line 100, in main
+    args.command(args)
+  File "/usr/local/Cellar/cloudformation-cli/0.2.22/libexec/lib/python3.10/site-packages/rpdk/core/validate.py", line 14, in validate
+    project.load()
+  File "/usr/local/Cellar/cloudformation-cli/0.2.22/libexec/lib/python3.10/site-packages/rpdk/core/project.py", line 444, in load
+    self._raise_invalid_project(
+  File "/usr/local/Cellar/cloudformation-cli/0.2.22/libexec/lib/python3.10/site-packages/rpdk/core/project.py", line 190, in _raise_invalid_project
+    raise InvalidProjectError(msg) from e
+rpdk.core.exceptions.InvalidProjectError: Project file /Volumes/workplace/NM-CFN/src/AWSCloudFormationResourceProvidersNetworkManager/.rpdk-config not found. Have you run 'init' or in a wrong directory?
+[2022-01-11T06:39:33Z] CRITICAL - Project file /Volumes/workplace/NM-CFN/src/AWSCloudFormationResourceProvidersNetworkManager/.rpdk-config not found. Have you run 'init' or in a wrong directory?

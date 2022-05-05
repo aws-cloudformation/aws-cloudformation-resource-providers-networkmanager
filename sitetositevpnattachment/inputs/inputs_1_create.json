@@ -1,0 +1,10 @@
+{
+  "CoreNetworkId": "{{CoreNetworkForContractTest}}",
+  "VpnConnectionArn": "{{VpnConnectionForContractTest}}",
+  "Tags": [
+    {
+      "Key": "key",
+      "Value": "value"
+    }
+  ]
+}

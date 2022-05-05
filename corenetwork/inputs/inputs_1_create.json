@@ -1,0 +1,9 @@
+{
+  "GlobalNetworkId": "{{GlobalNetworkForCoreNetworkContractTest}}",
+  "Tags": [
+    {
+      "Key": "key",
+      "Value": "value"
+    }
+  ]
+}

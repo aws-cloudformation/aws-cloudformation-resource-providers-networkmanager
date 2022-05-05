@@ -1,0 +1,10 @@
+{
+  "GlobalNetworkId": "{{GlobalNetworkForCoreNetworkContractTest}}",
+  "Description": "new version",
+  "Tags": [
+    {
+      "Key": "newKey",
+      "Value": "newValue"
+    }
+  ]
+}

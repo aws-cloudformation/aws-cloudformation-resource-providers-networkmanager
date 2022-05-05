@@ -1,0 +1,13 @@
+{
+  "PeerAddress": "128.128.127.1",
+  "ConnectAttachmentId": "{{ConnectAttachmentForContractTest}}",
+  "InsideCidrBlocks": [
+    "169.254.40.0/29"
+  ],
+  "Tags": [
+    {
+      "Key": "key",
+      "Value": "value"
+    }
+  ]
+}
