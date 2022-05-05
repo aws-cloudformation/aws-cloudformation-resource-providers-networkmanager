@@ -5,7 +5,9 @@ phases:
         java: openjdk8
         python: 3.7
     commands:
-      -  pip install pre-commit cloudformation-cli-java-plugin
+      - pip install pyyaml --upgrade
+      - pip install --upgrade 'six==1.15.0'
+      - pip install pre-commit cloudformation-cli-java-plugin
   build:
     commands:
       - pre-commit run --all-files
@@ -22,6 +24,16 @@ phases:
       - cd "$CODEBUILD_SRC_DIR/linkassociation"
       - mvn clean verify --no-transfer-progress
       - cd "$CODEBUILD_SRC_DIR/customergatewayassociation"
+      - mvn clean verify --no-transfer-progress
+      - cd "$CODEBUILD_SRC_DIR/corenetwork"
+      - mvn clean verify --no-transfer-progress
+      - cd "$CODEBUILD_SRC_DIR/connectattachment"
+      - mvn clean verify --no-transfer-progress
+      - cd "$CODEBUILD_SRC_DIR/connectpeer"
+      - mvn clean verify --no-transfer-progress
+      - cd "$CODEBUILD_SRC_DIR/sitetositevpnattachment"
+      - mvn clean verify --no-transfer-progress
+      - cd "$CODEBUILD_SRC_DIR/vpcattachment"
       - mvn clean verify --no-transfer-progress
     finally:
       - cat "$CODEBUILD_SRC_DIR/globalnetwork/rpdk.log"
