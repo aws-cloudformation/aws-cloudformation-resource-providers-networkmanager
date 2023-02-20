@@ -1,0 +1,112 @@
+package com.amazonaws.networkmanager.transitgatewaypeering.workflow;
+
+import com.amazonaws.networkmanager.transitgatewaypeering.AbstractTestBase;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import software.amazon.awssdk.services.networkmanager.model.Tag;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@ExtendWith(MockitoExtension.class)
+public class UtilsTest extends AbstractTestBase {
+    @Test
+    public void instance() {
+        assertThat(new Utils().toString().contains("Utils")).isTrue();
+    }
+
+    @Test
+    public void sdkTagsToCfnTags() {
+        final Set<Tag> sdkTags = new HashSet<>();
+        sdkTags.add(MOCKS.getSdkTag());
+
+        final Set<com.amazonaws.networkmanager.transitgatewaypeering.Tag> cfnTags = Utils.sdkTagsToCfnTags(sdkTags);
+
+        assertThat(cfnTags.size() == 1);
+        assertThat(cfnTags.iterator().next());
+    }
+
+    @Test
+    public void sdkTagsToCfnTagsWhenNull() {
+        final Set<com.amazonaws.networkmanager.transitgatewaypeering.Tag> cfnTags = Utils.sdkTagsToCfnTags(null);
+        assertThat(cfnTags.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void cfnTagsToSdkTags() {
+        final Set<Tag> sdkTags = new HashSet<>();
+        sdkTags.add(MOCKS.getSdkTag());
+        final Set<com.amazonaws.networkmanager.transitgatewaypeering.Tag> cfnTags = Utils.sdkTagsToCfnTags(sdkTags);
+
+        Set<Tag> sdkTagsConvertedBack = Utils.cfnTagsToSdkTags(cfnTags);
+
+        assertThat(cfnTags.iterator().next().getKey()).isEqualTo(sdkTags.iterator().next().key());
+        assertThat(cfnTags.iterator().next().getValue()).isEqualTo(sdkTags.iterator().next().value());
+        assertThat(cfnTags.iterator().next().getKey()).isEqualTo(sdkTagsConvertedBack.iterator().next().key());
+        assertThat(cfnTags.iterator().next().getValue()).isEqualTo(sdkTagsConvertedBack.iterator().next().value());
+    }
+
+    @Test
+    public void cfnTagsToSdkTagsWhenNull() {
+        Set<Tag> sdkTagsConvertedBack = Utils.cfnTagsToSdkTags(null);
+        assertThat(sdkTagsConvertedBack.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void difference1() {
+        com.amazonaws.networkmanager.transitgatewaypeering.Tag sharedTag = MOCKS.getCfnTag();
+        final Set<com.amazonaws.networkmanager.transitgatewaypeering.Tag> tags1 = new HashSet<>();
+        final com.amazonaws.networkmanager.transitgatewaypeering.Tag tag1 = MOCKS.getCfnTag();
+        tags1.add(sharedTag);
+        tags1.add(tag1);
+        final Set<com.amazonaws.networkmanager.transitgatewaypeering.Tag> tags2 = new HashSet<>();
+        final com.amazonaws.networkmanager.transitgatewaypeering.Tag tag2 = MOCKS.getCfnTag();
+        tags2.add(sharedTag);
+        tags2.add(tag2);
+
+        Set<com.amazonaws.networkmanager.transitgatewaypeering.Tag> difference = Utils.tagsDifference(tags1, tags2);
+
+        assertThat(difference.size()).isEqualTo(1);
+        assertThat(difference.iterator().next().getKey()).isEqualTo(tag1.getKey());
+        assertThat(difference.iterator().next().getValue()).isEqualTo(tag1.getValue());
+    }
+
+    @Test
+    public void difference2() {
+        com.amazonaws.networkmanager.transitgatewaypeering.Tag sharedTag = MOCKS.getCfnTag();
+        final Set<com.amazonaws.networkmanager.transitgatewaypeering.Tag> tags1 = new HashSet<>();
+        final com.amazonaws.networkmanager.transitgatewaypeering.Tag tag1 = MOCKS.getCfnTag();
+        tags1.add(sharedTag);
+        tags1.add(tag1);
+        final Set<com.amazonaws.networkmanager.transitgatewaypeering.Tag> tags2 = new HashSet<>();
+        final com.amazonaws.networkmanager.transitgatewaypeering.Tag tag2 = MOCKS.getCfnTag();
+        tags2.add(sharedTag);
+        tags2.add(tag2);
+
+        Set<com.amazonaws.networkmanager.transitgatewaypeering.Tag> difference = Utils.tagsDifference(tags2, tags1);
+
+        assertThat(difference.size()).isEqualTo(1);
+        assertThat(difference.iterator().next().getKey()).isEqualTo(tag2.getKey());
+        assertThat(difference.iterator().next().getValue()).isEqualTo(tag2.getValue());
+    }
+
+    @Test
+    public void difference3() {
+        com.amazonaws.networkmanager.transitgatewaypeering.Tag sharedTag = MOCKS.getCfnTag();
+        final Set<com.amazonaws.networkmanager.transitgatewaypeering.Tag> tags1 = new HashSet<>();
+        tags1.add(sharedTag);
+        final Set<com.amazonaws.networkmanager.transitgatewaypeering.Tag> tags2 = new HashSet<>();
+        final com.amazonaws.networkmanager.transitgatewaypeering.Tag diffTag = MOCKS.cfnTag(sharedTag.getKey(), "Something Else");
+        tags2.add(diffTag);
+
+        Set<com.amazonaws.networkmanager.transitgatewaypeering.Tag> difference = Utils.tagsDifference(tags2, tags1);
+
+        assertThat(difference.size()).isEqualTo(1);
+        assertThat(difference.iterator().next().getKey()).isEqualTo(diffTag.getKey());
+        assertThat(difference.iterator().next().getValue()).isEqualTo(diffTag.getValue());
+        assertThat(difference.iterator().next().getValue()).isNotEqualTo(sharedTag.getValue());
+    }
+}
