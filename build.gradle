@@ -1,0 +1,40 @@
+description "AWS CloudFormation Resource Providers - Network Manager"
+
+allprojects {
+    version "1.0-SNAPSHOT"
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+task release
+
+// Copy all resource providers to folder `packaging_additional_published_artifacts` for deployment
+def projectsToRelease = ["globalnetwork",
+                         "device",
+                         "link",
+                         "site",
+                         "linkassociation",
+                         "transitgatewayregistration",
+                         "customergatewayassociation",
+                         "corenetwork",
+                         "vpcattachment",
+                         "sitetositevpnattachment",
+                         "connectattachment",
+                         "connectpeer",
+                         "transitgatewaypeering",
+                         "transitgatewayroutetableattachment"].collect { project(it) }
+configure(projectsToRelease) {
+    task release(dependsOn: build) {
+        group "build"
+        description "Build the project and copy the RPDK package to brazil"
+        doLast {
+            copy {
+                from "${project.buildDir}/rpdk"
+                into rootProject.file("build/packaging_additional_published_artifacts")
+            }
+        }
+    }
+    rootProject.release.dependsOn(release)
+}
